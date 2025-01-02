@@ -1,0 +1,38 @@
+<!-- attendance_detail.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Attendance Detail</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h2>Attendance Detail</h2>
+      <p><strong>Employee:</strong> {{ attendance.employee.name }}</p>
+      <p><strong>Date:</strong> {{ attendance.date }}</p>
+      <p><strong>Status:</strong> {{ attendance.status }}</p>
+      <p><strong>Created By:</strong> {{ attendance.created_by.full_name }}</p>
+
+      <!-- Display feedback from OpenAI -->
+      <p><strong>Feedback:</strong> {{ feedback }}</p>
+
+      <a
+        href="{% url 'edit_attendance' attendance.id %}"
+        class="btn btn-primary"
+        >Edit</a
+      >
+      <a
+        href="{% url 'employee_detail' attendance.employee.id %}"
+        class="btn btn-secondary"
+        >View Employee</a
+      >
+    </div>
+  </body>
+</html>

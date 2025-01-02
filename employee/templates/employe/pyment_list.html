@@ -1,0 +1,115 @@
+{% extends 'employe.html' %} {% block content %} {% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>قائمة العاملين</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+      crossorigin="anonymous"
+    />
+    <style>
+      @media (max-width: 768px) {
+      }
+
+      .centered-table {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      .table-container {
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .button-group {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container centered-table">
+      <div class="">
+        <h2 class="mb-4 text-center">قائمة العاملين</h2>
+        <table class="table table-responsive table-striped text-center">
+          <thead>
+            <tr>
+              <th>الاجراءات</th>
+              <th class="text-center">الحساب</th>
+              <th class="d-none d-md-table-cell">المنصب</th>
+              <th class="text-center">عدد الايام</th>
+
+              <th class="text-center">عدد الايام</th>
+              <th class="text-center">الاسم</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for employee in attendance %}
+            <tr>
+              <td>
+                <div class="button-group">
+                  <a
+                    href="{% url 'edit_employee' employee.employee__id %}"
+                    class="btn btn-primary btn-sm"
+                    >تعديل</a
+                  >
+                  <a
+                    href="{% url 'mark_attendance_paid' employee.employee__id %}"
+                    class="btn btn-success btn-sm"
+                    >دفعة</a
+                  >
+                </div>
+              </td>
+
+              <td class="text-center">{{ employee.calculate_balance }}</td>
+              <td class="d-none d-md-table-cell">
+                {{ employee.employee__position }}
+              </td>
+
+              <td class="text-center">{{ employee.attendance_days }}</td>
+
+              <td class="text-center">{{ employee.employee__age }}</td>
+              <td class="text-center">
+                <a href="{% url 'serch_result' employee.employee__id%}"
+                  >{{ employee.employee__name }}</a
+                >
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="5">لا يوجد احد .</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"
+      integrity="sha384-R6s5J4FQwu8jCTInXYabQyrDsO6/wKY96oZGJ0ejQuL/3sBLg5gK/s5kuI5olApU"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+      integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shFvLZmZu3Kompz5G+2Qh2"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
+
+{% endblock %}

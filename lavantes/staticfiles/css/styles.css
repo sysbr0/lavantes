@@ -1,0 +1,46 @@
+/* Styles for navigation and calendar */
+.calendar {
+    border-collapse: collapse;
+    width: 100%; /* Adjust the width as needed */
+    max-width: 800px; /* Example: Set a maximum width if desired */
+    margin: auto; /* Center the table horizontally */
+  }
+  
+  .calendar th,
+  .calendar td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .calendar th {
+    background-color: #f2f2f2;
+  }
+  
+  .navigation {
+    margin-bottom: 10px;
+  }
+  
+  .current_day {
+    background-color: blue;
+    border: 2px solid #007bff; /* Blue border for the circle */
+    border-radius: 50%; /* Make it round */
+    width: 30px; /* Adjust size as needed */
+    height: 30px; /* Adjust size as needed */
+    line-height: 30px; /* Center text vertically */
+  }
+
+  
+  
+  .hae{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    max-width: 40%;
+  }
+
+
+  .black{
+    color: #000;
+  }

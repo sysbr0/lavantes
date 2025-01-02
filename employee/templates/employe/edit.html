@@ -1,0 +1,104 @@
+<!-- employe/templates/employe/edit_employee.html -->
+<!-- employee_list.html -->
+
+{% extends 'employe.html' %} {% block content %} {% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Edit Employee</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <style>
+      .container {
+        max-width: 600px; /* Adjust max-width as needed */
+      }
+      .btn-submit {
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-4">
+      <h2>Edit Employee</h2>
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="{{ form.name.id_for_label }}">Name</label>
+          {{ form.name }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.position.id_for_label }}">Position</label>
+          {{ form.position }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.age.id_for_label }}">Age</label>
+          {{ form.age }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.tc.id_for_label }}">TC Number</label>
+          {{ form.tc }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.title.id_for_label }}">Title</label>
+          {{ form.title }}
+        </div>
+
+        <div class="form-group">
+          <label for="{{ form.is_working.id_for_label }}">is working</label>
+          {{ form.is_working }}
+        </div>
+
+        <div class="form-group">
+          <label for="{{ form.phone.id_for_label }}"> Number</label>
+          {{ form.phone }}
+        </div>
+
+        <div class="form-group">
+          <label for="{{ form.phone_2.id_for_label }}">ُSecound Number</label>
+          {{ form.phone_2 }}
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-submit">
+          Save Changes
+        </button>
+      </form>
+
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>amount</th>
+            <th>effective_date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for moneysource in salaries %}
+          <tr>
+            <td>{{ moneysource.amount }}</td>
+            <td>{{ moneysource.effective_date }}</td>
+            <td>
+              <a
+                href="{% url 'salary_update_view' employee.id moneysource.pk %}"
+                class="btn btn-warning btn-sm"
+                >Edit</a
+              >
+              <a href="#" class="btn btn-danger btn-sm">Delete</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <a
+        href="{% url 'salary_create' employee.id  %}"
+        class="btn btn-primary mb-3"
+        >Add New Money Source</a
+      >
+    </div>
+  </body>
+</html>
+{% endblock %}

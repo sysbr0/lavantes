@@ -1,0 +1,82 @@
+{% extends 'employe.html' %} {% block content %} {% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Employees Not Attended Today</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <style>
+      .attendance-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .attendance-table th,
+      .attendance-table td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: center;
+      }
+      .attendance-table th {
+        background-color: #f2f2f2;
+      }
+      .badge {
+        font-size: 0.9em;
+      }
+      .btn-primary {
+        margin-left: 10px;
+      }
+      @media (max-width: 768px) {
+        .attendance-table th,
+        .attendance-table td {
+          width: 100%;
+        }
+        .attendance-table th {
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-4">
+      <h2 class="text-center">Employees Not Attended Today</h2>
+      <div class="table-responsive">
+        <table class="attendance-table table table-striped table-bordered">
+          <thead class="thead-light">
+            <tr>
+              <th class="text-center">Employee Name</th>
+              <th class="text-center">State</th>
+              <th class="text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for employee in employees_not_attended_today %}
+            <tr>
+              <td class="text-center">{{ employee.name }}</td>
+              <td class="text-center">
+                {% if employee.state %}
+                <span class="badge badge-success">Active</span>
+                {% else %}
+                <span class="badge badge-danger">Inactive</span>
+                {% endif %}
+              </td>
+              <td class="text-center">
+                <a
+                  href="{% url 'add_attendance' employee.id %}"
+                  class="btn btn-primary btn-sm"
+                  >Add</a
+                >
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>
+
+{% endblock %}

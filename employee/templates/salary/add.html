@@ -1,0 +1,76 @@
+{% extends 'employe.html' %} {% block content %} {% load static %}
+
+<head>
+  <link rel="stylesheet" type="text/css" href="{% static 'test/test.css' %}" />
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+    crossorigin="anonymous"
+  />
+</head>
+
+<div class="container mt-5">
+  <h2>Manage Salary for {{ employee.name }}</h2>
+
+  <form method="post" class="mb-5">
+    {% csrf_token %}
+    <div class="form-group">
+      {{ form.amount.label_tag }} {{ form.amount }}
+      <div class="alert alert-danger">{{ form.amount.errors }}</div>
+    </div>
+    <div class="form-group">
+      {{ form.effective_date.label_tag }} {{ form.effective_date }}
+      <div class="alert alert-danger">{{ form.effective_date.errors }}</div>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Salary</button>
+  </form>
+
+  <h2>Last Salaries</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Amount</th>
+        <th>Effective Date</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for salary in last_salaries %}
+      <tr>
+        <td>{{ salary.amount }}</td>
+        <td>{{ salary.effective_date }}</td>
+        <td>
+          <a
+            href="{% url 'salary_update_view' employee.id salary.pk %}"
+            class="btn btn-warning btn-sm"
+            >Edit</a
+          >
+          <a href="#" class="btn btn-danger btn-sm">Delete</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="3">No salaries found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script
+  src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+  integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+  crossorigin="anonymous"
+></script>
+<script
+  src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"
+  integrity="sha384-R6s5J4FQwu8jCTInXYabQyrDsO6/wKY96oZGJ0ejQuL/3sBLg5gK/s5kuI5olApU"
+  crossorigin="anonymous"
+></script>
+<script
+  src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+  integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shFvLZmZu3Kompz5G+2Qh2"
+  crossorigin="anonymous"
+></script>
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends 'employe.html' %} {% block content %} {% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Attendance from {{ from_date }} to {{ to_date }}</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #343a40;
+      }
+
+      .attendance-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0 auto;
+        background-color: #ffffff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .attendance-table th,
+      .attendance-table td {
+        border: 1px solid #dee2e6;
+        padding: 12px 15px;
+        text-align: left;
+      }
+
+      .attendance-table th {
+        background-color: #343a40;
+        color: #ffffff;
+      }
+
+      .attendance-table tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      .attendance-table tr:hover {
+        background-color: #e9ecef;
+      }
+
+      .date-form {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .date-form input {
+        margin: 5px;
+      }
+
+      .attendance-count {
+        text-align: center;
+        margin-top: 20px;
+        font-weight: bold;
+        color: #343a40;
+      }
+    </style>
+  </head>
+  <body>
+    <a href="{% url 'download_attendance_csv' %}" class="btn btn-primary"
+      >Download</a
+    >
+    <div class="date-form">
+      <form method="get" action="">
+        <label for="from_date">From: </label>
+        <input
+          type="date"
+          id="from_date"
+          name="from_date"
+          value="{{ from_date }}"
+        />
+        <label for="to_date">To: </label>
+        <input type="date" id="to_date" name="to_date" value="{{ to_date }}" />
+        <button type="submit" class="btn btn-primary">Filter</button>
+      </form>
+    </div>
+
+    <table class="attendance-table">
+      <thead>
+        <tr>
+          <th>Employee Name</th>
+          <th>count</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for count in attendance_count %}
+        <tr>
+          <td>{{count.employee__name }}</td>
+          <td>{{ count.total_days}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="attendance-count">
+      <h5>Attendance from {{ from_date }} to {{ to_date }}</h5>
+
+      <h4>Total Records: {{ attendance_count|length }}</h4>
+      <h4>Attendance Summary:</h4>
+    </div>
+  </body>
+</html>
+
+{% endblock %}

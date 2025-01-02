@@ -1,0 +1,82 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Employee Calendar</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+</head>
+<style>
+  .today {
+    border: 2px solid #007bff;
+    background-color: yellow;
+    border-radius: 10%;
+  }
+  
+  .worked {
+    border: 2px solid green;
+    background-color: lightgreen;
+    border-radius: 10%;
+  }
+  
+  .calendar {
+    width: 100%;
+  }
+  
+  .navigation {
+    text-align: center;
+  }
+  
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+</style>
+<body>
+  <div class="container">
+    <div class="navigation mt-3 mb-3">
+      <a href="?year={{ prev_year }}&month={{ prev_month }}" class="btn btn-primary">Previous Month</a>
+      <span class="mx-2"> | </span>
+      <a href="?year={{ next_year }}&month={{ next_month }}" class="btn btn-primary">Next Month</a>
+    </div>
+    <h1> {{ now.day }} {{ month_name }} {{ year }} Calendar</h1>
+
+    <table class="table table-bordered calendar">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Mon</th>
+          <th scope="col">Tue</th>
+          <th scope="col">Wed</th>
+          <th scope="col">Thu</th>
+          <th scope="col">Fri</th>
+          <th scope="col">Sat</th>
+          <th scope="col">Sun</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for week in calendar %}
+        <tr>
+          {% for day in week %}
+          <td
+            {% if day == now.day and now.year == year and now.month == month %}
+              class="today"
+            {% elif day in attendance_days %}
+              class="worked"
+            {% endif %}
+          >
+            {% if day != 0 %}
+              <a href="{% url 'attendance' year=year month=month day=day %}" class="btn btn-info btn-sm">
+                {{ day }}
+              </a>
+            {% endif %}
+          </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

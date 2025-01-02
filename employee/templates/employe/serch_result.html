@@ -1,0 +1,743 @@
+{% extends 'employeview.html' %} {% block content %} {% load static %}
+{% load custom_filters %}
+<head>
+  {% load static %}
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="{% static 'test/test.css' %}"
+  />
+
+
+  <link
+    href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,700"
+    rel="stylesheet"
+    type="text/css"
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Beiruti:wght@200..900&display=swap" rel="stylesheet">
+
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+  />
+  <link
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" type="text/css" href="{% static 'base.css' %}" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"
+    integrity="sha512-JjP4NvT6YsxHRIgJ7D5Y4VQMSuJihEw3zlPcBbXwZfNfRLIvFGIs/NhRQy5n9FWv7JPLiKKaTl6iDBXPzWsh5w=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+ 
+
+
+
+
+
+
+</head>
+
+    <!-- Your existing content -->
+  
+    <!-- Floating button for messaging -->
+ 
+
+
+
+      <a
+      href="{% url 'chat_view' employee.id %}"
+      class="floating-btn"
+      ><span class="fas fa-comment"
+        ><i class="sr-only">message</i></span
+      >
+
+    </a>
+
+    
+
+  <!-- Include Font Awesome -->
+ 
+
+<div class="container">
+
+    
+
+
+  <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+
+
+    
+  <style>
+ 
+  
+      .floating-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        background-color: #668cb5;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        z-index: 1000; /* Ensure it stays on top */
+        text-decoration: none;
+        color:#ffffff;
+      }
+    
+      .floating-btn i {
+        font-size: 24px;
+      }
+    
+      .floating-btn:hover {
+        background-color: #0056b3;
+      }
+
+
+    
+
+    .employe {
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      width: 100%;
+      padding : 10px;
+    }
+    .check {
+      background-color: green;
+      color: #fff;
+    }
+    .no-check {
+      background-color: red;
+      color: #fff;
+    }
+    .not-check-date{
+      display : none;
+    }
+    .check-date{
+      background-color: rgb(29, 185, 188);
+      color: #fff;
+
+    }
+    .pyed {
+      background-color: #0eb0eb !important; /* Highlight paid days */
+
+  
+    }
+  </style>
+  <div class="employe">
+
+    <ul class="map-list bordered">
+      <li  class="{% if check %}working-day text-center{% else %}no-check text-center{% endif %}"> <h5> {{ employee.name }} {{employee.position }} </h5></li>
+      <li  class="{% if employee.state %}working-day text-center{% else %}no-check text-center{% endif %}"> <h5> {{ employee.state }} </h5></li>
+      <li class="{% if check %}working-day text-center{% else %}no-check text-center{% endif %}" > <h5>   {{ message }} </h5></li>
+      <li class="{% if check %}working-day text-center{% else %}no-check text-center{% endif %}" > <h5>   {{ message }} </h5></li>
+      <li  class="{% if employee.state %}working-day text-center{% else %}no-check text-center{% endif %}"> <h5> {{ employee.E_salary }} </h5></li>
+      <li  class="{% if employee.state %}working-day text-center{% else %}no-check text-center{% endif %}"> <h5> {{ employee.calculate_balance }} </h5></li>
+
+
+
+    
+    </ul>
+   
+
+ 
+</div>
+
+<title>Attendance from {{ from_date }} to {{ to_date }}</title>
+<link
+  rel="stylesheet"
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+/>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #343a40;
+  }
+
+  .attendance-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .attendance-table th,
+  .attendance-table td {
+    border: 1px solid #dee2e6;
+    padding: 12px 15px;
+    text-align: left;
+  }
+
+  .attendance-table th {
+    background-color: #343a40;
+    color: #ffffff;
+  }
+
+  .attendance-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  .attendance-table tr:hover {
+    background-color: #e9ecef;
+  }
+
+  .date-form {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .date-form input {
+   
+  }
+
+  .attendance-count {
+    text-align: center;
+    margin-top: 20px;
+    font-weight: bold;
+    color: #343a40;
+  }
+
+
+
+
+  .date-form {
+    max-width: 600px; /* Adjust max-width as per your layout */
+    margin: auto; /* Center align the form */
+    padding: 20px;
+    background-color: #f9f9f9; /* Light gray background */
+    border: 1px solid #ddd; /* Light border */
+    border-radius: 5px; /* Rounded corners */
+  }
+  
+  .date-form form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Spacing between form elements */
+  }
+  
+  .date-form label {
+    flex: 1; /* Make labels take up equal space */
+    text-align: right; /* Right align text */
+  }
+  
+  .date-form input[type="date"],
+  .date-form button {
+    flex: 1; /* Make inputs and button take up equal space */
+    padding: 10px;
+    font-size: 16px;
+  }
+  
+  .date-form button {
+    max-width: 120px; /* Limit button width */
+    background-color: #007bff; /* Blue primary button color */
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  /* Media Query for Responsive Design */
+  @media (max-width: 768px) {
+    .date-form form {
+      flex-direction: column; /* Stack form elements vertically on smaller screens */
+    }
+  
+    .date-form label {
+      text-align: right; /* Keep labels right aligned */
+      margin-bottom: 5px; /* Add space below labels */
+    }
+  
+    .date-form input[type="date"],
+    .date-form button {
+      width: 100%; /* Full width for inputs and button */
+      max-width: none; /* Remove max-width on button */
+    }
+  }
+
+  
+
+
+</style>
+
+<div class="date-form">
+  
+  <form method="get" action="">
+    <label for="from_date">تاريخ البداية: </label>
+    <input
+      type="date"
+      id="from_date"
+      name="from_date"
+      value="{{ from_date }}"
+      required
+    />
+    <label for="to_date">تاريخ النهاية: </label>
+    <input
+      type="date"
+      id="to_date"
+      name="to_date"
+      value="{{ to_date }}"
+      required
+    />
+    <button type="submit" class="btn btn-primary">فلترة</button>
+  </form>
+</div>
+
+<ul class="map-list bordered">
+  <li class="{% if diffrence_check %}working-day text-center{% else %}no-check text-center{% endif %}" > <h5> عدد  الايام العمل  </h5></li>
+  
+  </ul>
+
+<table class="attendance-table">
+  <thead>
+    <tr class= "font-bold text-center">
+        <th  class= "font-bold text-center">العدد</th>
+      <th  class= "font-bold text-center">الاسم</th>
+    
+    </tr>
+  </thead>
+  <tbody>
+    {% for count in attendance_count %}
+    <tr class="black  font-bold text-center ">
+        <td class= "font-bold text-center"> {{ count.total_days}}</td>
+      <td class= "font-bold text-center">{{count.employee__name }}</td>
+    
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+
+<ul class="map-list bordered">
+  <li class="{% if diffrence_check %}working-day text-center{% else %}no-check text-center{% endif %}" > <h5> عدد  الايام المدفوعة </h5></li>
+  
+  </ul>
+
+<table class="attendance-table">
+  <thead>
+    <tr class= "font-bold text-center">
+        <th  class= "font-bold text-center">العدد</th>
+      <th  class= "font-bold text-center">الاسم</th>
+    
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for count in pyment_cont %}
+    <tr class="black  font-bold text-center ">
+        <td class= "font-bold text-center"> {{ count.total_days}}</td>
+      <td class= "font-bold text-center">{{count.employee__name }}</td>
+    
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<ul class="map-list bordered">
+<li class="{% if diffrence_check %}working-day text-center{% else %}no-check text-center{% endif %}" > <h5>   {{ messages }} </h5></li>
+
+</ul>
+
+
+
+
+
+
+<div class="attendance-count">
+
+  <ul class="map-list bordered">
+    <li class="{% if check_date %}check-date text-center{% else %}not-check-date text-center{% endif %}" > <h5>  {{ from_date }}  عدد الايام من التاريخ  </h5></li>
+    <li class="{% if check_date %}check-date text-center{% else %}not-check-date  text-center{% endif %}" > <h5>{{ to_date }}    الى تاريخ  </h5></li>
+
+    </ul>
+
+
+
+
+</div>
+</body>
+
+
+
+
+
+
+
+   
+<style>
+
+
+  .inline {
+    text-align: center; /* Center align content */
+    width: 90%; /* Take full width by default */
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+    align-items: center;
+   
+
+    flex-direction: column;
+  }
+
+  @media (max-width: 400px) {
+    .inline {
+      width: 70%;
+      flex-direction: column; /* Stack content vertically on mobile */
+      align-items: center; /* Center content vertically */
+      justify-content: center;
+    }
+
+
+
+.tabling table {
+  width:80%;
+  justify-content: center;
+  align-items: center;
+}
+  }
+
+
+    
+    .calendar {
+      width: 100%;
+    }
+    
+    .navigation {
+      text-align: center;
+    }
+    
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+
+    }
+
+
+
+  .black{
+    color: #000;
+  }
+
+
+  
+  .map-list {
+    list-style-type: none;
+    padding-left: 0;
+  }
+
+  
+  .map-list li {
+    position: relative;
+    padding: 10px;
+    margin-bottom: 10px;
+    color: black;
+    background-color: white; /* White background for list items */
+    border: 1px solid #ccc; /* Light border for clarity */
+    border-radius: 5px; /* Rounded corners for aesthetic */
+  }
+  .map-list li:before {
+    content: "\f024"; /* FontAwesome icon code for list */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 800;
+    position: absolute;
+    left: 10px; /* Adjust icon position */
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1px;
+  }
+  .map-list .current-day {
+    background-color: yellow; /* Yellow background for current day */
+  }
+  .map-list .working-day {
+    background-color: lightgreen; /* Light green background for working days */
+  }
+
+
+  .map-list .no-check {
+    background-color: red;
+    color: #fff;
+  }
+
+
+  .navigation {
+    text-align: center;
+  }
+  
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  </style>
+  <div class="container-fluid">
+    <div class="row mt-3 mb-3 justify-content-center">
+      <div class="col-auto">
+        <div class="navigation">
+          <a href="?year={{ prev_year }}&month={{ prev_month }}" class="btn btn-primary">الشهر السابق</a>
+          <span class="mx-2"> | </span>
+          <a href="?year={{ next_year }}&month={{ next_month }}" class="btn btn-primary">الشهر القادم</a>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-auto">
+        <h4>تقويم العمل</h4>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-10 col-lg-8">
+        <table class="table table-bordered calendar text-center">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">الاثنين</th>
+              <th scope="col">الثلاثاء</th>
+              <th scope="col">الأربعاء</th>
+              <th scope="col">الخميس</th>
+              <th scope="col">الجمعة</th>
+              <th scope="col">السبت</th>
+              <th scope="col">الأحد</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for week in calendar %}
+            <tr>
+              {% for day in week %}
+              <td
+                {% if day == now.day and now.year == year and now.month == month %}
+                  class="todayis"
+                {% elif day in attendance_days %}
+                  class="worked"
+                {% endif %}
+              >
+                {% if day != 0 %}
+                  <p class="btn btn-info btn-sm mb-0">
+                    {{ day }}
+                  </p>
+                {% endif %}
+              </td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <style>
+    .todayis {
+      background-color: #ffeb3b !important; /* Highlight today */
+    }
+    .worked {
+      background-color: green !important; /* Highlight attendance days */
+    }
+    .calendar th, .calendar td {
+      padding: 0.5rem; /* Adjust padding for better fit */
+    }
+    @media (max-width: 768px) {
+      .calendar th, .calendar td {
+        padding: 0.25rem; /* Adjust padding for smaller screens */
+        font-size: 0.8rem; /* Adjust font size for smaller screens */
+      }
+    }
+
+
+
+
+
+    .table-responsive {
+      margin-bottom: 1.5rem;
+    }
+    
+    .table thead th {
+      vertical-align: bottom;
+      border-bottom: 2px solid #dee2e6;
+    }
+    
+    .table tbody + tbody {
+      border-top: 2px solid #dee2e6;
+    }
+    
+    .table .thead-dark th {
+      color: #fff;
+      background-color: #343a40;
+      border-color: #454d55;
+    }
+    
+    .todayis {
+      background-color: #ffeeba;
+    }
+    
+    .worked {
+      background-color: #c3e6cb;
+    }
+    
+    .pyed {
+      background-color: #f5c6cb;
+    }
+    
+    .navigation .btn {
+      margin: 0 5px;
+    }
+    
+    .text-center {
+      text-align: center;
+    }
+    
+  </style>
+
+  
+
+        <div class="employe">
+       
+        
+        <ul class="map-list bordered">
+          <li class="current-day text-center"> <h5>اللون الأصفر هو اليوم الحالي </h5></li>
+          <li class="working-day text-center"> <h5>اللون الأخضر هو الأيام العمل </h5></li>
+          <li class="text-center"> <h5 > بدون لون يدل على أن العامل لم يحضر </h5></li>
+        </ul>
+        
+    </div>
+
+
+
+
+
+
+  <div class="container-fluid">
+  
+    <div class="row justify-content-center">
+      <div class="col-auto">
+        <h4>تقويم الدفعات </h4>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-10 col-lg-8">
+        <table class="table table-bordered calendar text-center">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">الاثنين</th>
+              <th scope="col">الثلاثاء</th>
+              <th scope="col">الأربعاء</th>
+              <th scope="col">الخميس</th>
+              <th scope="col">الجمعة</th>
+              <th scope="col">السبت</th>
+              <th scope="col">الأحد</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for week in calendar %}
+            <tr>
+              {% for day in week %}
+                <td
+                {% if day == now.day and now.year == year and now.month == month %}
+                  class="todayis"
+                {% elif day in attendance_days %}
+                  {% if attendance_status|key:day %}
+                    class="pyed"
+                  {% else %}
+                    class="worked"
+                  {% endif %}
+                {% else %}
+                  class=""
+                {% endif %}
+                >
+                  {% if day != 0 %}
+                    <p class="btn btn-info btn-sm mb-0">{{ day }}</p>
+                  {% endif %}
+                </td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+  <div class="unpaid-records">
+    <h4 class="text-center" >قائمة مستحقات الدفع </h4>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for record in unpaid_records %}
+        <tr>
+          <td>{{ record.date }}</td>
+          <td>
+            <form action="{% url 'mark_as_paid' record.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-success">تسديد</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+
+  <div class="unpaid-records">
+    <h4 class="text-center" >قائمة اخر المدفوعات </h4>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for record in peyed_record %}
+        <tr>
+          <td>{{ record.date }}</td>
+          <td>
+            <form action="{% url 'mark_as_not_pyed' record.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger">تراجع</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  
+
+
+  
+  
+</body>
+
+
+
+
+
+
+{% endblock %}

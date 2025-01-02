@@ -1,0 +1,73 @@
+{% extends 'employeview.html' %} {% block content %} {% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Attendance on {{ date }}</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+
+    <style>
+      .attendance-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .attendance-table th,
+      .attendance-table td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: center;
+      }
+      .attendance-table th {
+        background-color: #f2f2f2;
+      }
+      .employee-name {
+        width: 40%;
+      }
+
+      @media (max-width: 768px) {
+        .attendance-table th,
+        .attendance-table td {
+        }
+        .attendance-table th {
+          text-align: center;
+        }
+        .employee-name {
+          width: 50%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h4 class="text-center my-4">Attendance on {{ attendance_date }}</h4>
+      <div class="table-responsive">
+        <table class="attendance-table table table-striped table-bordered">
+          <thead class="thead-light">
+            <tr>
+              <th class="text-center">أضيف بواسطة</th>
+              <th class="text-center">التاريخ</th>
+              <th class="text-center employee-name">الاسم</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for attendance in attendance %}
+            <tr>
+              <td class="text-center">{{ attendance.created_by_admin }}</td>
+              <td class="text-center">{{ attendance.date }}</td>
+              <td class="text-center employee-name">
+                {{ attendance.get_employee_name }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>
+
+{% endblock %}
