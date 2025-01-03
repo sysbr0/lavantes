@@ -1,0 +1,54 @@
+{% extends 'base.html' %} {% block content %} {% load static %}
+
+<div class="container mt-5">
+  <h1 class="text-center mb-4">Client List</h1>
+  <a href="{% url 'addclint' %}" class="btn btn-info btn-sm">add clint</a>
+
+  <a href="{% url 'download_clints_csv' %}" class="btn btn-info btn-sm"
+    >export</a
+  >
+
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Contact Number</th>
+        <th scope="col">Source</th>
+        <th scope="col">Is Company</th>
+        <th scope="col">full name</th>
+
+        <th scope="col">Actions</th>
+        <!-- Added Actions column for edit/view links -->
+      </tr>
+    </thead>
+    <tbody>
+      {% for clint in clints %}
+      <tr>
+        <th scope="row">{{ clint.id }}</th>
+        <td>{{ clint.clint_name }}</td>
+        <td>{{ clint.clint_email }}</td>
+        <td>{{ clint.c_number }}</td>
+        <td>{{ clint.c_sorce }}</td>
+        <td>{{ clint.is_company|yesno:"Yes,No" }}</td>
+        <!-- Better readability -->
+        <td>{{ clint.clint_tr_name }}</td>
+
+        <td>
+          <a href="{% url 'fatch_clint' clint.id %}" class="btn btn-info btn-sm"
+            >View</a
+          >
+          <a
+            href="{% url 'update_clint' clint.id %}"
+            class="btn btn-info btn-sm"
+            >Edit</a
+          >
+          <!-- Add more actions if needed -->
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

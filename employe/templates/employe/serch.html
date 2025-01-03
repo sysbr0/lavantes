@@ -1,0 +1,30 @@
+{% extends 'employeview.html' %} {% block content %} {% load static %}
+<div class="container">
+  <h2 class="text-center my-4">ادخل رقم الهوية</h2>
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-row justify-content-center">
+      <div class="col-md-6 mb-2">{{ form.as_p }}</div>
+      <div class="col-md-2 mb-2">
+        <button type="submit" class="btn btn-primary btn-block">بحث</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<style>
+  @media (max-width: 768px) {
+    h2 {
+      font-size: 18px;
+    }
+    .form-row {
+      display: block;
+    }
+    .form-row .col-md-6,
+    .form-row .col-md-2 {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  }
+</style>
+{% endblock %}

@@ -1,0 +1,14 @@
+<!-- templates/update_uds_bill_inner.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Update UdsBill Inner</title>
+  </head>
+  <body>
+    <h1>Update UdsBill Inner</h1>
+    <form method="post">
+      {% csrf_token %} {{ form.as_p }}
+      <button type="submit">Save Changes</button>
+    </form>
+  </body>
+</html>

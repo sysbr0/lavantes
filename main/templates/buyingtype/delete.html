@@ -1,0 +1,13 @@
+{% extends 'usd_bar.html' %} {% block content %}
+<div class="container">
+  <h1 class="mt-5">Delete Buying Type</h1>
+  <p>
+    Are you sure you want to delete the buying type "{{ buying_type.name }}"?
+  </p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a href="{% url 'buying_type_list' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}

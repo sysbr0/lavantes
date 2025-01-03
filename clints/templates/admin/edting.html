@@ -1,0 +1,315 @@
+{% extends 'side_bar.html' %} {% block content %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Customer</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+    />
+    <style>
+      .containerre {
+        margin-top: 50px;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .inputGroupContainer .input-group {
+        width: 100%; /* Ensure input takes full width */
+        border-radius: 4px;
+      }
+
+      .input-group input,
+      .input-group select,
+      .input-group textarea {
+        height: 30px;
+
+        border-radius: 4px;
+      }
+
+      .form-group label {
+        font-weight: bold;
+      }
+
+      .help-block {
+        font-size: 0.9rem;
+        color: #d9534f;
+      }
+
+      .btnb {
+        width: 100%;
+        padding: 10px;
+        font-size: 1.1rem;
+        border-radius: 4px;
+        background-color: #007bff;
+        color: #fff;
+      }
+
+      .btn:hover {
+        background-color: #0056b3;
+      }
+
+      .alert {
+        font-size: 1.2rem;
+        display: none;
+      }
+
+      .input-group-addon {
+        min-width: 40px;
+      }
+
+      .form-group input[type="file"] {
+        padding: 3px;
+        background-color: #f1f1f1;
+      }
+
+      .form-group img {
+        margin-bottom: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="containerre">
+      <form
+        class="well form-horizontal"
+        method="post"
+        id="customer_form"
+        enctype="multipart/form-data"
+      >
+        {% csrf_token %}
+        <fieldset>
+          <legend>Edit Customer</legend>
+
+          <!-- Name -->
+          <div class="form-group {% if form.name.errors %}has-error{% endif %}">
+            <label class="col-md-4 control-label">{{ form.name.label }}</label>
+            <div class="col-md-6 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon">
+                  <i class="glyphicon glyphicon-user"></i>
+                </span>
+                {{ form.name }}
+              </div>
+              {% for error in form.name.errors %}
+              <span class="help-block">{{ error }}</span>
+              {% endfor %}
+            </div>
+          </div>
+
+          {% if customer.profile_image %}
+          <div class="form-group">
+            <div class="col-md-4 control-label">
+              <label>Profile Image</label>
+            </div>
+            <div class="col-md-6">
+              <img
+                src="{{ customer.profile_image.url }}"
+                alt="Profile Image"
+                style="max-width: 150px; max-height: 150px; margin-bottom: 15px"
+              />
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- Profile Image Field -->
+          <div
+            class="form-group {% if form.profile_image.errors %}has-error{% endif %}"
+          >
+            <label class="col-md-4 control-label"
+              >{{ form.profile_image.label }}</label
+            >
+            <div class="col-md-6 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon">
+                  <i class="glyphicon glyphicon-picture"></i>
+                </span>
+                {{ form.profile_image }}
+              </div>
+              {% for error in form.profile_image.errors %}
+              <span class="help-block">{{ error }}</span>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Tax Number -->
+          <div class="form-group {% if form.tax.errors %}has-error{% endif %}">
+            <label class="col-md-4 control-label">{{ form.tax.label }}</label>
+            <div class="col-md-6 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon">
+                  <i class="glyphicon glyphicon-list-alt"></i>
+                </span>
+                {{ form.tax }}
+              </div>
+              {% for error in form.tax.errors %}
+              <span class="help-block">{{ error }}</span>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div
+            class="form-group {% if form.email.errors %}has-error{% endif %}"
+          >
+            <label class="col-md-4 control-label">{{ form.email.label }}</label>
+            <div class="col-md-6 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon">
+                  <i class="glyphicon glyphicon-envelope"></i>
+                </span>
+                {{ form.email }}
+              </div>
+              {% for error in form.email.errors %}
+              <span class="help-block">{{ error }}</span>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Phone Number -->
+          <div
+            class="form-group {% if form.number.errors %}has-error{% endif %}"
+          >
+            <label class="col-md-4 control-label"
+              >{{ form.number.label }}</label
+            >
+            <div class="col-md-6 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon">
+                  <i class="glyphicon glyphicon-earphone"></i>
+                </span>
+                {{ form.number }}
+              </div>
+              {% for error in form.number.errors %}
+              <span class="help-block">{{ error }}</span>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Is Company -->
+          <div
+            class="form-group {% if form.is_company.errors %}has-error{% endif %}"
+          >
+            <label class="col-md-4 control-label"
+              >{{ form.is_company.label }}</label
+            >
+            <div class="col-md-6">
+              <div class="checkbox">
+                <label>{{ form.is_company }} Yes</label>
+              </div>
+              {% for error in form.is_company.errors %}
+              <span class="help-block">{{ error }}</span>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Company Name -->
+          <div
+            class="form-group {% if form.company.errors %}has-error{% endif %}"
+          >
+            <label class="col-md-4 control-label"
+              >{{ form.company.label }}</label
+            >
+            <div class="col-md-6 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon">
+                  <i class="glyphicon glyphicon-briefcase"></i>
+                </span>
+                {{ form.company }}
+              </div>
+              {% for error in form.company.errors %}
+              <span class="help-block">{{ error }}</span>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Company Name -->
+          <div
+            class="form-group {% if form.token.errors %}has-error{% endif %}"
+          >
+            <label class="col-md-4 control-label">{{ form.token.label }}</label>
+            <div class="col-md-6 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon">
+                  <i class="glyphicon glyphicon-briefcase"></i>
+                </span>
+                {{ form.token }}
+              </div>
+              {% for error in form.token.errors %}
+              <span class="help-block">{{ error }}</span>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Address -->
+          <div
+            class="form-group {% if form.address.errors %}has-error{% endif %}"
+          >
+            <label class="col-md-4 control-label"
+              >{{ form.address.label }}</label
+            >
+            <div class="col-md-6 inputGroupContainer">
+              <div class="input-group">
+                <span class="input-group-addon">
+                  <i class="glyphicon glyphicon-home"></i>
+                </span>
+                {{ form.address }}
+              </div>
+              {% for error in form.address.errors %}
+              <span class="help-block">{{ error }}</span>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Success message -->
+          <div class="alert alert-success" role="alert" id="success_message">
+            <i class="glyphicon glyphicon-thumbs-up"></i> Customer updated
+            successfully!
+          </div>
+
+          <!-- Submit Button -->
+          <div class="form-group">
+            <div class="col-md-6 col-md-offset-4">
+              <button type="submit" class="btnb btn-primary">
+                Update <span class="glyphicon glyphicon-send"></span>
+              </button>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+
+    <!-- jQuery and Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <!-- Optional JavaScript for form validation and success message -->
+    <script>
+      $(document).ready(function () {
+        $("#success_message").hide();
+
+        $("#customer_form").on("submit", function (event) {
+          event.preventDefault();
+          var form = $(this);
+
+          $.ajax({
+            url: '{% url "edit_customer" customer.id %}',
+            type: "POST",
+            data: form.serialize(),
+            success: function (response) {
+              $("#success_message").fadeIn();
+              form.trigger("reset");
+            },
+            error: function (response) {
+              console.log("Error:", response);
+            },
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
+{% endblock %}

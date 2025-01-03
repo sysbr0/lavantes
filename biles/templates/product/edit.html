@@ -1,0 +1,111 @@
+{% extends 'usd_bar.html' %} {% block content %}
+<div class="container">
+  <div class="add-clint-container border">
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"
+      integrity="sha512-JjP4NvT6YsxHRIgJ7D5Y4VQMSuJihEw3zlPcBbXwZfNfRLIvFGIs/NhRQy5n9FWv7JPLiKKaTl6iDBXPzWsh5w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <h2 class="mt-5">update pruduct</h2>
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-group row">
+        <label
+          for="{{ form.product_name.id_for_label }}"
+          class="col-md-3 col-form-label text-md-right"
+          >product Name:</label
+        >
+        <div class="col-md-9">{{ form.product_name }}</div>
+      </div>
+
+      <div class="form-group row">
+        <label
+          for="{{ form.product_type.id_for_label }}"
+          class="col-md-3 col-form-label text-md-right"
+          >product Name:</label
+        >
+        <div class="col-md-9">{{ form.product_type }}</div>
+      </div>
+
+      <div class="form-group row">
+        <label
+          for="{{ form.product_ham.id_for_label }}"
+          class="col-md-3 col-form-label text-md-right"
+          >ham:</label
+        >
+        <div class="col-md-9">{{ form.product_ham }}</div>
+      </div>
+      <div class="form-group row">
+        <label
+          for="{{ form.jar.id_for_label }}"
+          class="col-md-3 col-form-label text-md-right"
+          >jar name :</label
+        >
+        <div class="col-md-9">{{ form.jar }}</div>
+      </div>
+
+      <div class="form-group row">
+        <label
+          for="{{ form.package.id_for_label }}"
+          class="col-md-3 col-form-label text-md-right"
+          >Pakage Number:</label
+        >
+        <div class="col-md-9">{{ form.package }}</div>
+      </div>
+      <div class="form-group row">
+        <label
+          for="{{ form.net_weight.id_for_label }}"
+          class="col-md-3 col-form-label text-md-right"
+          >Net weight:</label
+        >
+        <div class="col-md-9">{{ form.net_weight }}</div>
+      </div>
+      <div class="form-group row">
+        <label
+          for="{{ form.top_weight.id_for_label }}"
+          class="col-md-3 col-form-label text-md-right"
+          >top weight:</label
+        >
+        <div class="col-md-9">{{ form.top_weight }}</div>
+      </div>
+      <div class="form-group row">
+        <label
+          for="{{ form.amount_inside.id_for_label }}"
+          class="col-md-3 col-form-label text-md-right"
+          >Amount inside:</label
+        >
+        <div class="col-md-9">{{ form.amount_inside }}</div>
+      </div>
+      <div class="form-group row">
+        <label
+          for="{{ form.qr.id_for_label }}"
+          class="col-md-3 col-form-label text-md-right"
+          >QR:</label
+        >
+        <div class="col-md-9">{{ form.qr }}</div>
+      </div>
+      <div class="form-group row">
+        <label
+          for="{{ form.image.id_for_label }}"
+          class="col-md-3 col-form-label text-md-right"
+          >Image URL:</label
+        >
+        <div class="col-md-9">{{ form.image }}</div>
+      </div>
+      <div class="form-group row">
+        <div class="offset-md-3 col-md-9">
+          <button type="submit" class="btn btn-primary">update</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

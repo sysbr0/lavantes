@@ -1,0 +1,726 @@
+{% extends 'side_bar.html' %} {% block content %} {% load biles_filters %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ customer.name }}</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <style>
+      /* Custom styles for the cards */
+      .custom-card {
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+      }
+
+      .custom-card:hover {
+        transform: translateY(-5px);
+      }
+      .custom-card .card-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+      .custom-card .card-text {
+        font-size: 1.2rem;
+        color: #4caf50;
+      }
+
+      /* General table styling */
+      .table-responsive {
+        overflow-x: auto;
+      }
+
+      .table {
+        border-collapse: separate;
+        border-spacing: 0;
+        margin: 20px auto;
+        width: 100%;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .table th,
+      .table td {
+        padding: 15px;
+        vertical-align: middle;
+        border-top: 1px solid #dee2e6;
+      }
+
+      .table th {
+        background-color: #343a40;
+        color: white;
+        font-size: 0.85rem;
+        font-weight: bold;
+        text-align: center;
+      }
+
+      .table-hover tbody tr:hover {
+        background-color: #f8f9fa;
+      }
+
+      .table tbody tr:nth-child(odd) {
+        background-color: #f2f2f2;
+      }
+
+      .table tbody tr:nth-child(even) {
+        background-color: #ffffff;
+      }
+
+      .table-sm td,
+      .table-sm th {
+        padding: 0.75rem;
+      }
+
+      a {
+        text-decoration: none;
+        color: #007bff;
+      }
+
+      .table th:first-child {
+        border-top-left-radius: 10px;
+      }
+
+      .table th:last-child {
+        border-top-right-radius: 10px;
+      }
+
+      .table tbody tr:last-child td:first-child {
+        border-bottom-left-radius: 10px;
+      }
+
+      .table tbody tr:last-child td:last-child {
+        border-bottom-right-radius: 10px;
+      }
+
+      @media (max-width: 768px) {
+        .table-responsive {
+          display: block;
+          width: 100%;
+          overflow-x: auto;
+        }
+
+        .table thead {
+          display: none;
+        }
+
+        .table tbody td {
+          display: block;
+          text-align: left;
+          padding-right: 50%;
+          position: relative;
+          white-space: nowrap;
+        }
+
+        .table tbody td::before {
+          content: attr(data-label);
+          position: absolute;
+          right: 0;
+          width: 50%;
+          padding-right: 15px;
+          font-weight: bold;
+          text-align: right;
+          background-color: #f8f9fa;
+        }
+
+        .table tbody tr {
+          display: block;
+          margin-bottom: 0.625rem;
+          border-bottom: 1px solid #dee2e6;
+        }
+
+        .table tbody td {
+          border: none;
+        }
+      }
+
+      .date-form {
+        max-width: 600px;
+        margin: auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+
+      .date-form form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .date-form label {
+        flex: 1;
+        text-align: right;
+      }
+
+      .date-form input[type="date"],
+      .date-form button {
+        flex: 1;
+        padding: 10px;
+        font-size: 16px;
+      }
+
+      @media (max-width: 768px) {
+        .date-form form {
+          flex-direction: column;
+        }
+
+        .date-form label {
+          text-align: right;
+          margin-bottom: 5px;
+        }
+
+        .date-form input[type="date"],
+        .date-form button {
+          width: 100%;
+          max-width: none;
+        }
+      }
+
+      form {
+        display: flex;
+        flex-direction: column; /* Stack items vertically */
+      }
+
+      label {
+        margin-bottom: 5px; /* Space between label and input */
+        font-weight: bold; /* Bold labels */
+      }
+
+      button {
+        padding: 10px;
+        background-color: #007bff; /* Bootstrap primary color */
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      button:hover {
+        background-color: #0056b3; /* Darker shade for hover */
+      }
+
+      @media (min-width: 600px) {
+        form {
+          flex-direction: row; /* Change to row for larger screens */
+          justify-content: space-between; /* Space between inputs */
+        }
+
+        input[type="date"] {
+          margin-bottom: 0; /* Remove bottom margin on larger screens */
+          width: 48%; /* Half width for larger screens */
+        }
+
+        button {
+          width: auto; /* Allow button width to be auto on larger screens */
+          margin-left: 10px; /* Space between button and inputs */
+        }
+      }
+
+      .floating-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        background-color: rgb(0, 255, 0);
+        color: black;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        z-index: 1000; /* Ensure it stays on top */
+        text-decoration: none;
+      }
+
+      .floating-btnTran {
+        position: fixed;
+        bottom: 90px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        background-color: rgb(255, 64, 0);
+        color: #fff;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        z-index: 1000; /* Ensure it stays on top */
+        text-decoration: none;
+      }
+
+      .floating-up {
+        position: fixed;
+        bottom: 90px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        background-color: #668cb5;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        z-index: 1000; /* Ensure it stays on top */
+        text-decoration: none;
+        color: #ffffff;
+      }
+
+      .floating-btn i {
+        font-size: 24px;
+      }
+
+      .floating-btn:hover {
+        background-color: #0056b3;
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+
+  <a href="#" class="floating-btn"><i class="bi bi-cash-coin"></i> </a>
+
+  <a href="#" class="floating-btnTran"
+    ><i class="bi bi-chat-square-text"></i>
+  </a>
+
+  <body>
+    <div class="container mt-5">
+      <div class="row mb-4">
+        <div>
+          <div class="card custom-card bg-light mb-3">
+            <div class="card-body">
+              <h5 class="card-title">فلترة الفواتير حسب التاريخ</h5>
+
+              <div class="form-container">
+                <form method="get" action="">
+                  <div>
+                    <label for="from_date">تاريخ البداية:</label>
+                    <input
+                      type="date"
+                      id="from_date"
+                      name="from_date"
+                      value="{{ from_date }}"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label for="to_date">تاريخ النهاية:</label>
+                    <input
+                      type="date"
+                      id="to_date"
+                      name="to_date"
+                      value="{{ to_date }}"
+                      required
+                    />
+                  </div>
+                  <button type="submit" class="btn btn-primary">فلترة</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Cards to show total sums -->
+        <div class="row mb-4">
+          <div class="col-md-4">
+            <div class="card custom-card bg-light mb-3">
+              <div class="card-body">
+                <h5 class="card-title">Total Paymants ₺</h5>
+                <p class="card-text">{{ total_payment }} ₺</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <a href="{%url 'fetch_bills_tr_list'%}">
+              <div class="card custom-card bg-light mb-3">
+                <div class="card-body">
+                  <h5 class="card-title">Attendance Count</h5>
+
+                  <p class="card-text">{{ total_attendance_count }} ₺</p>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card custom-card bg-light mb-3">
+              <div class="card-body">
+                <h5 class="card-title">Balance</h5>
+                <p class="card-text">{{total_balance|format_currency:"₺" }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="row">
+          <div class="col-md-6">
+            <h3>دفعات بالليرة التركية</h3>
+            <canvas id="employePymentsChart"></canvas>
+          </div>
+          <div class="col-md-6">
+            <h3>
+              حضور
+              <button id="openAttendanceChart" class="btn btn-primary">
+                <i class="bi bi-zoom-in"></i>
+              </button>
+            </h3>
+
+            <canvas id="EmployeAttandince"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal for Bills Chart -->
+      <div
+        class="modal"
+        id="employePymentsChartModal"
+        tabindex="-1"
+        aria-labelledby="employePymentsChartModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="employePymentsChartModalLabel">
+                Bills Payments Chart
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <canvas id="employePymentsChartModalCanvas"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Button for the Attendance Chart -->
+
+      <!-- Modal for Attendance Chart -->
+      <div
+        class="modal"
+        id="attendanceChartModal"
+        tabindex="-1"
+        aria-labelledby="attendanceChartModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="attendanceChartModalLabel">
+                Attendance Chart
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <canvas id="attendanceChartModalCanvas"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+                          // First Chart (Line Chart)
+                      const ctxemployePyment = document.getElementById('employePymentsChart').getContext('2d');
+                      const employePymentsChart = new Chart(ctxemployePyment, {
+                          type: 'line',
+                          data: {
+                              labels: {{ dates_payment|safe }},  // Dates on the X-axis
+                              datasets: [{
+                                  label: 'Price',
+                                  data: {{ payment_amounts|safe }},  // Prices on the Y-axis
+                                  borderColor: '#4caf50',  // Custom border color (green)
+                                  backgroundColor: 'rgba(76, 175, 80, 0.3)',  // Custom background color (semi-transparent green)
+                                  pointBackgroundColor: '#388e3c',  // Point color
+                                  pointBorderColor: '#ffffff',  // Point border color
+                                  pointHoverBackgroundColor: '#ffffff',  // Hover state background color
+                                  pointHoverBorderColor: '#388e3c',  // Hover state border color
+                                  fill: true,  // Fill the area under the line
+                                  tension: 0.4,  // Smoother curves
+                                  borderWidth: 2,  // Line thickness
+                              }]
+                          },
+                          options: {
+                              scales: {
+                                  x: {
+                                      title: {
+                                          display: true,
+                                          text: 'Date',
+                                          font: {
+                                              size: 16,
+                                              weight: 'bold'
+                                          },
+                                          color: '#000000'  // X-axis title color
+                                      },
+                                      grid: {
+                                          color: '#e0e0e0',  // X-axis grid line color
+                                      }
+                                  },
+                                  y: {
+                                      title: {
+                                          display: true,
+                                          text: 'Price (₺)',
+                                          font: {
+                                              size: 16,
+                                              weight: 'bold'
+                                          },
+                                          color: '#000000'  // Y-axis title color
+                                      },
+                                      grid: {
+                                          color: '#e0e0e0',  // Y-axis grid line color
+                                      },
+                                      beginAtZero: true,
+                                      ticks: {
+                                          callback: function(value, index, values) {
+                                              return '₺' + value;  // Add $ sign before the value
+                                          }
+                                      }
+                                  }
+                              },
+                              plugins: {
+                                  legend: {
+                                      display: true,
+                                      position: 'top',
+                                      labels: {
+                                          font: {
+                                              size: 14,
+                                              style: 'italic'
+                                          },
+                                          color: '#333333'  // Legend text color
+                                      }
+                                  },
+                                  tooltip: {
+                                      callbacks: {
+                                          label: function(tooltipItem) {
+                                              return '₺' + tooltipItem.formattedValue;  // Add $ sign in the tooltip
+                                          }
+                                      },
+                                      backgroundColor: '#ffffff',  // Tooltip background color
+                                      titleColor: '#333333',  // Tooltip title color
+                                      bodyColor: '#666666',  // Tooltip body text color
+                                      borderColor: '#4caf50',  // Tooltip border color
+                                      borderWidth: 1  // Tooltip border thickness
+                                  }
+                              }
+                          }
+                      });
+
+
+              // Second Chart (Bar Chart for Attendance Count)
+              const ctxemployeAttandice = document.getElementById('EmployeAttandince').getContext('2d');
+              const EmployeAttandince = new Chart(ctxemployeAttandice, {
+                  type: 'bar',
+                  data: {
+                      labels: {{ dates|safe }},  // Dates on the X-axis
+                      datasets: [{
+                          label: 'Attendance Count',
+                          data: {{ attendance_counts|safe }},  // Attendance data
+                          backgroundColor: 'rgba(33, 150, 243, 0.7)',  // Blue background for bars
+                          borderColor: '#2196F3',
+                          borderWidth: 1,
+                      }]
+                  },
+                  options: {
+                      scales: {
+                          x: {
+                              title: {
+                                  display: true,
+                                  text: 'Date',
+                                  font: {
+                                      size: 16,
+                                      weight: 'bold',
+                                  },
+                              },
+                          },
+                          y: {
+                              title: {
+                                  display: true,
+                                  text: 'Count',
+                                  font: {
+                                      size: 16,
+                                      weight: 'bold',
+                                  },
+                              },
+                              ticks: {
+                                  beginAtZero: true,
+                                  callback: function(value) {
+                                      return value.toLocaleString();
+                                  }
+                              }
+                          }
+                      },
+                      responsive: true,
+                      plugins: {
+                          legend: {
+                              position: 'top',
+                          },
+                          tooltip: {
+                              callbacks: {
+                                  label: function(tooltipItem) {
+                                      return `${tooltipItem.raw} People`;  // Format tooltips with attendance count
+                                  }
+                              }
+                          }
+                      },
+                  }
+              });
+
+
+
+
+                // Open Attendance Chart in Modal
+          document.getElementById('openAttendanceChart').addEventListener('click', function() {
+            // Open the modal
+            const attendanceChartModal = new bootstrap.Modal(document.getElementById('attendanceChartModal'));
+            attendanceChartModal.show();
+
+            // Render the same chart in the modal
+            const modalctxemployeAttandice = document.getElementById('attendanceChartModalCanvas').getContext('2d');
+            new Chart(modalctxemployeAttandice, {
+                type: 'bar',
+                data: {
+                    labels: {{ dates|safe }},
+                    datasets: [{
+                        label: 'Attendance Count',
+                        data: {{ attendance_counts|safe }},
+                        borderColor: '#ff6347',
+                        backgroundColor: 'rgba(255, 99, 71, 0.3)',
+                        borderWidth: 2,
+                        barPercentage: 0.7,
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Date', font: { size: 16, weight: 'bold' } }
+                        },
+                        y: {
+                            title: { display: true, text: 'Attendance Count', font: { size: 16, weight: 'bold' } },
+                            beginAtZero: true,
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return tooltipItem.raw + " attendees";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+      </script>
+
+      <!-- Added custom responsive-table class -->
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover table-sm">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col" class="text-center">#</th>
+
+              <th scope="col" class="text-center">التاريخ</th>
+              <th scope="col" class="text-center">ملاحظة</th>
+              <th scope="col" class="text-center">القيمة</th>
+              <th scope="col" class="text-center">العامل</th>
+              <th scope="col" class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for i in payments %}
+            <tr>
+              <th scope="row" class="text-center" data-label="#">
+                {{ forloop.counter }}
+              </th>
+
+              <td class="text-center" data-label="التاريخ">
+                {{ i.date|date:"Y-m-d" }}
+              </td>
+              <td class="text-center" data-label="ملاحظة ">{{ i.note }}</td>
+              <td class="text-center" data-label="السعر الاجمالي">
+                ₺{{ i.amount|format_currency:"₺" }}
+              </td>
+              <td class="text-center" data-label="العامل">
+                {{ i.employee.name }}
+              </td>
+              <td class="text-center" data-label="Actions">
+                <a href="#" class="btn btn-primary btn-sm"> View </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <!-- Pagination Controls -->
+        {% if not show_all %}
+        <nav>
+          <ul class="pagination justify-content-center">
+            {% if bills.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page=1">First</a>
+            </li>
+            <li class="page-item">
+              <a
+                class="page-link"
+                href="?page={{ payments.previous_page_number }}"
+                >Previous</a
+              >
+            </li>
+            {% endif %} {% for num in payments.paginator.page_range %}
+            <li
+              class="page-item {% if payments.number == num %}active{% endif %}"
+            >
+              <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %} {% if bills.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ payments.next_page_number }}"
+                >Next</a
+              >
+            </li>
+            <li class="page-item">
+              <a
+                class="page-link"
+                href="?page={{ payments.paginator.num_pages }}"
+                >Last</a
+              >
+            </li>
+            {% endif %}
+
+            <li class="page-item">
+              {% if show_all %}
+              <a href="?page=1" class="page-link4">Show Paginated</a>
+              {% else %}
+              <a href="?show_all=True" class="page-link">Show All</a>
+              {% endif %}
+            </li>
+          </ul>
+        </nav>
+        {% endif %}
+      </div>
+    </div>
+  </body>
+</html>
+
+{%endblock%}

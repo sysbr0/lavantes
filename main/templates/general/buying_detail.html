@@ -1,0 +1,15 @@
+<h1>
+  {{ general_buying.client.name }} - {{ general_buying.buying_type.name }}
+</h1>
+<p>Created at: {{ general_buying.created_at }}</p>
+<p>Total Price: {{ general_buying.price }}</p>
+
+<h2>Inner Transactions</h2>
+<ul>
+  {% for inner in general_buying.inner_transactions.all %}
+  <li>
+    {{ inner.description }} - {{ inner.price }} x {{ inner.amount }} = {{
+    inner.total }}
+  </li>
+  {% endfor %}
+</ul>

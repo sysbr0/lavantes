@@ -1,0 +1,27 @@
+<!-- templates/upload_clients.html -->
+{% extends 'side_bar.html' %} {% block content %}
+<div class="container mt-5">
+  <h2>Upload Product CSV</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="csv_file">CSV File</label>
+      <input
+        type="file"
+        class="form-control"
+        id="csv_file"
+        name="csv_file"
+        required
+      />
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Upload</button>
+  </form>
+  {% if messages %}
+  <div class="mt-3">
+    {% for message in messages %}
+    <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

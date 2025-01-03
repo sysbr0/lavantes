@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TrBills Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <h1>TrBills Price Chart</h1>
+
+    <canvas id="billsChart" width="400" height="200"></canvas>
+
+    <script>
+
+
+      const ctx1 = document.getElementById('billsChart').getContext('2d');
+      const billsChart = new Chart(ctx1, {
+          type: 'line',
+          data: {
+              labels: {{ ids|safe }},  // Dates on the X-axis
+              datasets: [{
+                  label: 'Price',
+                  data: {{ prices|safe }},  // Prices on the Y-axis
+                  borderColor: '#4caf50',  // Custom border color (green)
+                  backgroundColor: 'rgba(76, 175, 80, 0.3)',  // Custom background color (semi-transparent green)
+                  pointBackgroundColor: '#388e3c',  // Point color
+                  pointBorderColor: '#ffffff',  // Point border color
+                  pointHoverBackgroundColor: '#ffffff',  // Hover state background color
+                  pointHoverBorderColor: '#388e3c',  // Hover state border color
+                  fill: true,  // Fill the area under the line
+                  tension: 0.4,  // Smoother curves
+                  borderWidth: 2,  // Line thickness
+              }]
+          },
+          options: {
+              scales: {
+                  x: {
+                      title: {
+                          display: true,
+                          text: 'Date',
+                          font: {
+                              size: 16,
+                              weight: 'bold'
+                          },
+                          color: '#000000'  // X-axis title color
+                      },
+                      grid: {
+                          color: '#e0e0e0',  // X-axis grid line color
+                      }
+                  },
+                  y: {
+                      title: {
+                          display: true,
+                          text: 'Price ($)',
+                          font: {
+                              size: 16,
+                              weight: 'bold'
+                          },
+                          color: '#000000'  // Y-axis title color
+                      },
+                      grid: {
+                          color: '#e0e0e0',  // Y-axis grid line color
+                      },
+                      beginAtZero: true,
+                      ticks: {
+                          callback: function(value, index, values) {
+                              return '$' + value;  // Add $ sign before the value
+                          }
+                      }
+                  }
+              },
+              plugins: {
+                  legend: {
+                      display: true,
+                      position: 'top',
+                      labels: {
+                          font: {
+                              size: 14,
+                              style: 'italic'
+                          },
+                          color: '#333333'  // Legend text color
+                      }
+                  },
+                  tooltip: {
+                      callbacks: {
+                          label: function(tooltipItem) {
+                              return '$' + tooltipItem.formattedValue;  // Add $ sign in the tooltip
+                          }
+                      },
+                      backgroundColor: '#ffffff',  // Tooltip background color
+                      titleColor: '#333333',  // Tooltip title color
+                      bodyColor: '#666666',  // Tooltip body text color
+                      borderColor: '#4caf50',  // Tooltip border color
+                      borderWidth: 1  // Tooltip border thickness
+                  }
+              }
+          }
+      });
+    </script>
+  </body>
+</html>

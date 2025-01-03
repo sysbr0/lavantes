@@ -41,38 +41,62 @@ AUTH_USER_MODEL = 'users.CustomUser'  # Replace 'yourapp' with the actual name o
 # Application definition
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
-    "home","employee"
-    ,"users"
+    'django.contrib.admin',
+    'django.contrib.sitemaps',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'main',
+    'users',
+    'biles',
+    'customers',
+
+
+    'employe',
+    'schedule',
+    'api',
+    'corsheaders',
+    'rest_framework',
+    'money',
+    "clints",
+
+    "home",
+    'channels',
+    'chat'
+
 
 ]
 
 MIDDLEWARE = [
-    "django.middleware.security.SecurityMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+     'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'api.middleware.SaveMessagesMiddleware',  # Add this middleware
+
+
 ]
+CORS_ORIGIN_ALLOW_ALL = True
+
 
 ROOT_URLCONF = "lavantes.urls"
 
 
 
-
+AUTH_USER_MODEL = 'users.CustomUser'
 
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],  # Include any additional directories if needed
+        'DIRS': [],  # Leave empty if using app-level templates directories
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -94,16 +118,13 @@ WSGI_APPLICATION = "lavantes.wsgi.application"
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'lavantes',  # Your database name
-        'USER': 'admin',  # Your MySQL username
-        'PASSWORD': 'xT7yKmF#R3!A',  # Your MySQL password
-        'HOST': '107.180.116.47',  # Your GoDaddy MySQL server IP
-        'PORT': '3306',  # Default MySQL port
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',  # This will create a file named 'db.sqlite3' in your project directory.
     }
 }
 
 
+LOGIN_URL = '/account/login'
 STATIC_URL = '/static/'
 
 # This should point to the static directory within your project

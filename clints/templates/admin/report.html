@@ -1,0 +1,261 @@
+ {% load biles_filters %}
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Transactions</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    /* Base Styles */
+    body {
+      font-family: "Roboto", sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+      color: #343a40;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1,
+    h2 {
+      color: #495057;
+      margin-bottom: 15px;
+    }
+
+    /* Client Info Section */
+    .client-info {
+      display: flex;
+      align-items: center;
+      background-color: #ffffff;
+      padding: 20px;
+      border: 1px solid #ddd;
+      margin-bottom: 20px;
+    }
+
+    .client-info img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      margin-right: 20px;
+      object-fit: cover;
+    }
+
+    .client-info div {
+      flex: 1;
+    }
+
+    .client-info h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    .client-info p {
+      margin: 8px 0 0;
+      font-size: 1rem;
+      color: #6c757d;
+    }
+
+    .client-info .paid {
+      font-size: 1.2rem;
+      color: #28a745;
+      font-weight: bold;
+    }
+
+    .buy {
+      font-size: 1.2rem;
+      color: red;
+      font-weight: bold;
+    }
+
+    /* Table Styles */
+    .transactions {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+    }
+
+    .transactions th,
+    .transactions td {
+      padding: 15px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+
+    .transactions th {
+      background-color: #f8f9fa;
+      color: #343a40;
+      font-weight: bold;
+    }
+
+    .transactions td {
+      font-size: 0.95rem;
+    }
+
+    .transactions tr:last-child td {
+      border-bottom: none;
+    }
+
+    .type-payment {
+      background-color: #e6f4ea; /* Light green background for payments */
+      color: #28a745; /* Green text for payments */
+      font-weight: bold;
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        background-color: #fff;
+        color: #000;
+      }
+
+      .container {
+        max-width: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .client-info {
+        page-break-inside: avoid;
+        background-color: #fff;
+        border: none;
+        box-shadow: none;
+      }
+    
+      .client-info img {
+        width: 80px;
+        height: 80px;
+      }
+    
+      .client-info h1 {
+        font-size: 1.4rem;
+      }
+    
+      .client-info p {
+        font-size: 0.9rem;
+        color: #000;
+      }
+    }
+      .transactions {
+        border: 1px solid #ddd;
+      }
+
+      .transactions th {
+        background-color: #f8f9fa;
+        color: #000;
+      }
+
+      .transactions tr:hover {
+        background-color: #fff;
+      }
+
+      .no-print {
+        display: none;
+      }
+
+      h1,
+      h2 {
+        color: #000;
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .client-info {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .client-info img {
+        margin-bottom: 15px;
+      }
+
+      .transactions th,
+      .transactions td {
+        padding: 10px;
+      }
+    }
+  </style>
+
+
+  <style>
+    .transactions th, 
+    .transactions td {
+      padding: 8px; /* Reduced padding for smaller row height */
+      font-size: 0.8rem; /* Smaller font size for the table content */
+    }
+  
+    @media print {
+      .transactions th, 
+      .transactions td {
+        padding: 6px; /* Further reduce padding for printing */
+        font-size: 0.7rem; /* Adjust font size for compact layout on print */
+      }
+    }
+  </style>
+  
+</head>
+<body>
+  <div class="container">
+    <!-- Client Info Section -->
+    <div class="client-info">
+      <img src="{{ profile_image }}" alt="{{ client.name }}" />
+      <divclass="client-data">
+        <h1>{{ client.name }}</h1>
+        <p>Balance:</p>
+        <p class="{% if balance %}buy{% else %}paid{% endif %}">
+          {{ client.balance|format_currency:"₺" }}
+        </p>
+        <p>Total Buy:</p>
+        <p class="buy">{{ buy|format_currency:"₺" }}</p>
+        <p>Total Paid:</p>
+        <p class="paid">{{ pay|format_currency:"₺" }}</p>
+      </div>
+    </div>
+
+    <!-- Transactions Table -->
+    <h2>Transactions</h2>
+    <table class="transactions">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Type</th>
+          <th>Details</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for transaction in transactions %}
+        <tr
+          class="{% if transaction.is_payment == 'True' %}type-payment{% endif %}"
+        >
+          <td>{{ transaction.date }}</td>
+          <td>{{ transaction.transaction_type }}</td>
+          <td>{{ transaction.notee }}</td>
+          <td>{{ transaction.price|format_currency:"₺" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4">No transactions found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <button class="no-print" onclick="window.print()">Print</button>
+  </div>
+</body>
+
+<script>
+  // Trigger print dialog after the page fully loads
+  window.onload = function () {
+      window.print();
+  };
+</script>

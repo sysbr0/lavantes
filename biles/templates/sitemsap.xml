@@ -1,0 +1,14 @@
+{% load l10n %}
+{% load i18n %}
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{% for url in urlset %}
+  <url>
+    <loc>{{ url.location }}</loc>
+    <lastmod>{{ url.lastmod|date:"Y-m-d" }}</lastmod>
+    <changefreq>{{ url.changefreq }}</changefreq>
+    <priority>{{ url.priority }}</priority>
+    <title>{{ url.title }}</title>  <!-- Add the product name as the title -->
+  </url>
+{% endfor %}
+</urlset>

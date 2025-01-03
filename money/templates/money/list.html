@@ -1,0 +1,39 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-5">
+  <h2>Money Sources</h2>
+  <a href="{% url 'moneysource_add' %}" class="btn btn-primary mb-3"
+    >Add New Money Source</a
+  >
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Balance</th>
+        <th>Source Type</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for moneysource in moneysources %}
+      <tr>
+        <td>{{ moneysource.name }}</td>
+        <td>{{ moneysource.balance }}</td>
+        <td>{{ moneysource.get_source_type_display }}</td>
+        <td>
+          <a
+            href="{% url 'moneysource_edit' moneysource.pk %}"
+            class="btn btn-warning btn-sm"
+            >Edit</a
+          >
+          <a
+            href="{% url 'moneysource_delete' moneysource.pk %}"
+            class="btn btn-danger btn-sm"
+            >Delete</a
+          >
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

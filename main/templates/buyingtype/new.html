@@ -1,0 +1,14 @@
+{% extends 'usd_bar.html' %} {% block content %}
+
+<title>New Buying Type</title>
+<div class="container">
+  <h1 class="mt-5">{{ title }}</h1>
+  <form method="post" class="form-group">
+    {% csrf_token %} {{ form.as_p }}
+    <button type="submit" class="btn btn-success mt-3">Save</button>
+    <a href="{% url 'buying_type_list' %}" class="btn btn-secondary mt-3"
+      >Cancel</a
+    >
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends 'base.html' %} {% block content %} {% load static %}
+
+<div class="container mt-5">
+  <h1 class="text-center mb-4">product List</h1>
+  <a href="{% url 'addProduct' %}" class="btn btn-info btn-sm">add product</a>
+
+  <a href="{% url 'download_Product_csv' %}" class="btn btn-info btn-sm"
+    >export</a
+  >
+
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">Ham</th>
+        <th scope="col">Net weight</th>
+        <th scope="col">Top weight</th>
+
+        <th scope="col">Actions</th>
+        <!-- Added Actions column for edit/view links -->
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in form %}
+      <tr>
+        <th scope="row">{{ i.qr }}</th>
+        <td>{{ i }}</td>
+        <td>{{ i.updated_at }}</td>
+        <td>{{ i.note }}</td>
+        <td>{{ i.price }}</td>
+
+        <td>
+          <a href="" class="btn btn-info btn-sm">View</a>
+          <a href="" class="btn btn-info btn-sm">Edit</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">Ham</th>
+        <th scope="col">Net weight</th>
+        <th scope="col">Top weight</th>
+
+        <th scope="col">Actions</th>
+        <!-- Added Actions column for edit/view links -->
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in form_in %}
+      <tr>
+        <th scope="row">{{ i }}</th>
+        <td>{{ i }}</td>
+        <td>{{ i.amount }}</td>
+        <td>{{ i.note }}</td>
+        <td>{{ i.price }}</td>
+
+        <td>
+          <a href="" class="btn btn-info btn-sm">View</a>
+          <a href="" class="btn btn-info btn-sm">Edit</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

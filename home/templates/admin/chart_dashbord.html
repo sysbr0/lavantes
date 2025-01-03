@@ -1,0 +1,1199 @@
+{% extends 'side_bar.html' %} {% block content %}
+{% load  biles_filters  %}
+{% load custom_filters %}
+<html lang="en" >
+<head >
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+  />
+
+  <style>
+    /* General print styles */
+    @media print {
+      body {
+        font-size: 9px; /* Adjust font size for better readability */
+        color: #000;
+      }
+      a {
+        font-size: 8px;
+      }
+      h5 {
+        font-size: 5px;
+        line-height: 1.2;
+      }
+      .card-text {
+        font-size: 8px;
+
+
+      }
+
+      .card-title{
+        font-size: 8px;
+      }
+
+
+      .datedisplay{
+        display: none;
+      }
+      .labiles{
+        display: inline-block;
+        height: 50%;
+      }
+  
+      .custom-card {
+        display: inline-block;
+        width: 105%; /* Adjust width to fit three cards in a row */
+        margin: 0.5rem; /* Add some spacing between cards */
+        height: 80%;
+
+      }
+  
+      .row.mb-4, .row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between; /* Align cards side by side */
+        
+      }
+  
+      .chart-container {
+        width: 100%; /* Full width for charts */
+        margin: 0 0 20px; /* Add space below charts */
+      }
+  
+      canvas {
+        width: 100% !important; /* Make charts take full width */
+        height: auto !important; /* Maintain aspect ratio */
+      }
+  
+      .form-container, .date-form {
+        display: none; /* Hide forms in print view */
+      }
+  
+      a {
+        color: inherit; /* Remove link colors for print */
+        text-decoration: none; /* Remove underline */
+      }
+  
+      .btn {
+        display: none; /* Hide buttons in print */
+      }
+    }
+
+
+    /* Portrait-specific styles */
+    @page {
+      size: A4 portrait;
+      margin: 20mm;
+    }
+  
+    /* Landscape-specific styles */
+    @page :landscape {
+      size: A4 landscape;
+      margin: 15mm;
+    }
+  </style>
+  
+  <style>
+    /* Custom styles for the cards */
+  
+    .custom-card:hover {
+      transform: translateY(-5px);
+    }
+    .custom-card .card-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    .custom-card .card-text {
+      font-size: 1.2rem;
+      color: #4caf50;
+    }
+
+    /* General table styling */
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+
+  
+
+    a {
+      text-decoration: none;
+      color: #007bff;
+    }
+
+
+ 
+
+
+
+
+    .date-form {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .date-form form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .date-form label {
+      flex: 1;
+      text-align: right;
+    }
+
+    .date-form input[type="date"],
+    .date-form button {
+      flex: 1;
+      padding: 10px;
+      font-size: 13px;
+    }
+
+   
+    @media (max-width: 768px) {
+      .date-form form {
+        flex-direction: column;
+      }
+
+      .date-form label {
+        text-align: right;
+        margin-bottom: 5px;
+      }
+
+      .date-form input[type="date"],
+      .date-form button {
+        width: 100%;
+        max-width: none;
+      }
+    }
+
+    form {
+      display: flex;
+      flex-direction: column; /* Stack items vertically */
+    }
+
+    label {
+      margin-bottom: 5px; /* Space between label and input */
+      font-weight: bold; /* Bold labels */
+    }
+
+
+    button {
+      padding: 10px;
+      background-color: #007bff; /* Bootstrap primary color */
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #0056b3; /* Darker shade for hover */
+    }
+
+    @media (min-width: 600px) {
+      form {
+        flex-direction: row; /* Change to row for larger screens */
+        justify-content: space-between; /* Space between inputs */
+      }
+
+      input[type="date"] {
+        margin-bottom: 0; /* Remove bottom margin on larger screens */
+        width: 48%; /* Half width for larger screens */
+      }
+
+      button {
+        width: auto; /* Allow button width to be auto on larger screens */
+        margin-left: 10px; /* Space between button and inputs */
+      }
+    }
+
+
+    .chart-container {
+      position: relative;
+      width: 100%; /* Full width */
+      max-width: 600px; /* Limit the width on larger screens */
+      margin: 0 auto; /* Center alignment */
+  }
+  
+  @media (max-width: 768px) {
+      .chart-container {
+          max-width: 90%; /* Reduce width for smaller screens */
+      }
+  }
+  
+  @media (max-width: 480px) {
+      .chart-container {
+          max-width: 100%; /* Full width on mobile */
+          padding: 0 10px; /* Add some padding for smaller devices */
+      }
+  
+      #monthlyChart {
+          font-size: 12px; /* Adjust font size for better readability */
+      }
+  }
+
+  
+
+
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container mt-5">
+
+
+    <div class="row mb-4  ">
+
+        <div class="card custom-card bg-light mb-3  ">
+
+          <div class="card-body datedisplay  ">
+     <h5 class="card-title">فلترة الفواتير حسب التاريخ</h5>
+         
+    <div class="form-container ">
+      <form method="get" action="">
+        <div>
+          <label for="from_date">تاريخ البداية:</label>
+          <input
+            type="date"
+            id="from_date"
+            name="from_date"
+            value="{{ from_date }}"
+            required
+          />
+        </div>
+        <div>
+          <label for="to_date">تاريخ النهاية:</label>
+          <input
+            type="date"
+            id="to_date"
+            name="to_date"
+            value="{{ to_date }}"
+            required
+          />
+        </div>
+        <button type="submit" class="btn btn-primary ">فلترة</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="container mt-5 labiles">
+  <div class="card custom-card bg-light mb-3 ">
+    <div class="card-body">
+      <h5 class="card-title">المبيعات</h5>
+
+    </div>
+  </div>
+</div>
+    <!-- Cards to show total sums -->
+    <div class="row mb-4">
+      <a href="{%url 'fetch_bills_list_usd'%}">
+      <div class="col-md-4">
+        <div class="card custom-card bg-light mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Total Biles $</h5>
+            <p class="card-text">{{ total_price }} $</p>
+          </div>
+        </div>
+      </a>
+      </div>
+
+      <div class="col-md-4">
+        <a href="{%url 'fetch_bills_list_Tr'%}">
+          <div class="card custom-card bg-light mb-3">
+            <div class="card-body">
+              <h5 class="card-title">Total Biles ₺</h5>
+
+              <p class="card-text">{{ total_price_tr }} ₺</p>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card custom-card bg-light mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Balance $</h5>
+
+            <p class="card-text">{{ balance_summary.total_balance_usd|format_currency:"$" }}</p>
+        
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card custom-card bg-light mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Balance ₺</h5>
+          <p class="card-text">{{balance_summary.total_balance_tr|format_currency:"₺"  }} </p>
+
+      
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <!-- Charts -->
+    <div class="row">
+      <div class="col-md-6">
+        <h3>مبيعات بالدلر</h3>
+        <canvas id="billsChart"></canvas>
+      </div>
+      <div class="col-md-6">
+        <h3>مبيعات بالليرة التركية</h3>
+        <canvas id="secondChart"></canvas>
+      </div>
+    </div>
+
+
+  
+  
+
+
+
+
+<div class="chart-container">
+    <canvas id="monthlyChart"   style="height: 600px;"></canvas>
+</div>
+
+
+<div class="row mb-4">
+</div>
+
+<div class="row mb-4">
+</div>
+
+
+<div class="container mt-5">
+  <div class="card custom-card bg-light mb-3">
+    <div class="card-body">
+      <h5 class="card-title"> العمال </h5>
+
+    </div>
+  </div>
+</div>
+
+<div class="row mb-4">
+
+    <div class="col-md-4">
+      <div class="card custom-card bg-light mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Total Paymants ₺</h5>
+          <p class="card-text">{{ total_payment }} ₺</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+
+        <div class="card custom-card bg-light mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Attendance Count</h5>
+
+            <p class="card-text">{{ total_attendance_count }}</p>
+          </div>
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+      <div class="card custom-card bg-light mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Balance</h5>
+          <p class="card-text">{{total_balance|format_currency:"₺" }}</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+<!-- Charts -->
+<div class="row">
+  <div class="col-md-6">
+    <h3>دفعات بالليرة التركية</h3>
+    <canvas id="employePymentsChart"></canvas>
+  </div>
+  <div class="col-md-6">
+    <h3>
+      حضور
+      <button id="openAttendanceChart" class="btn btn-primary">
+        <i class="bi bi-zoom-in"></i>
+      </button>
+    </h3>
+
+    <canvas id="EmployeAttandince"></canvas>
+  </div>
+</div>
+</div>
+
+<!-- Modal for Bills Chart -->
+<div
+class="modal"
+id="employePymentsChartModal"
+tabindex="-1"
+aria-labelledby="employePymentsChartModalLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="employePymentsChartModalLabel">
+        Bills Payments Chart
+      </h5>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <canvas id="employePymentsChartModalCanvas"></canvas>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Button for the Attendance Chart -->
+
+<!-- Modal for Attendance Chart -->
+<div
+class="modal"
+id="attendanceChartModal"
+tabindex="-1"
+aria-labelledby="attendanceChartModalLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="attendanceChartModalLabel">
+        Attendance Chart
+      </h5>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <canvas id="attendanceChartModalCanvas"></canvas>
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+
+<div class="container mt-5">
+  <div class="card custom-card bg-light mb-3">
+    <div class="card-body">
+      <h5 class="card-title"> المشتريات  </h5>
+
+    </div>
+  </div>
+</div>
+
+    <!-- Cards to show total sums -->
+    <div class="row mb-4">
+      <div class="col-md-4">
+        <div class="card custom-card bg-light mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Total Biles ₺</h5>
+            <p class="card-text">{{ total_price_tr }} ₺</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <a href="{%url 'fetch_bills_tr_list'%}">
+          <div class="card custom-card bg-light mb-3">
+            <div class="card-body">
+              <h5 class="card-title">Total Pymants</h5>
+
+              <p class="card-text">{{ total_pymant }} ₺</p>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card custom-card bg-light mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Balance</h5>
+            <p class="card-text">{{balance|format_currency:"₺" }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row">
+      <div class="col-md-6">
+        <h3>دفعات بالليرة التركية</h3>
+        <canvas id="clintPyments"></canvas>
+      </div>
+      <div class="col-md-6">
+        <h3>مشتريات بالليرة التركية</h3>
+        <canvas id="clintbuying"></canvas>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+    </div>
+
+  <script>
+        // First Chart (Line Chart)
+    const ctx1 = document.getElementById('billsChart').getContext('2d');
+    const billsChart = new Chart(ctx1, {
+        type: 'line',
+        data: {
+            labels: {{ usdids|safe }},  // Dates on the X-axis
+            datasets: [{
+                label: 'Price',
+                data: {{ usdprices|safe }},  // Prices on the Y-axis
+                borderColor: '#4caf50',  // Custom border color (green)
+                backgroundColor: 'rgba(76, 175, 80, 0.3)',  // Custom background color (semi-transparent green)
+                pointBackgroundColor: '#388e3c',  // Point color
+                pointBorderColor: '#ffffff',  // Point border color
+                pointHoverBackgroundColor: '#ffffff',  // Hover state background color
+                pointHoverBorderColor: '#388e3c',  // Hover state border color
+                fill: true,  // Fill the area under the line
+                tension: 0.4,  // Smoother curves
+                borderWidth: 2,  // Line thickness
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Date',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        },
+                        color: '#000000'  // X-axis title color
+                    },
+                    grid: {
+                        color: '#e0e0e0',  // X-axis grid line color
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Price ($)',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        },
+                        color: '#000000'  // Y-axis title color
+                    },
+                    grid: {
+                        color: '#e0e0e0',  // Y-axis grid line color
+                    },
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value, index, values) {
+                            return '$' + value;  // Add $ sign before the value
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        font: {
+                            size: 14,
+                            style: 'italic'
+                        },
+                        color: '#333333'  // Legend text color
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return '$' + tooltipItem.formattedValue;  // Add $ sign in the tooltip
+                        }
+                    },
+                    backgroundColor: '#ffffff',  // Tooltip background color
+                    titleColor: '#333333',  // Tooltip title color
+                    bodyColor: '#666666',  // Tooltip body text color
+                    borderColor: '#4caf50',  // Tooltip border color
+                    borderWidth: 1  // Tooltip border thickness
+                }
+            }
+        }
+    });
+
+
+
+     // start of secondChart
+
+    const ctx2 = document.getElementById('secondChart').getContext('2d');
+    const secondChart = new Chart(ctx2, {
+        type: 'line',
+        data: {
+            labels: {{ trids|safe }},  // Dates on the X-axis
+            datasets: [{
+                label: 'Price',
+                data: {{ trprices|safe }},  // Prices on the Y-axis
+                borderColor: '#edf4f5',  // Custom border color (green)
+                backgroundColor: 'rgba(153, 32, 44 ,0.7)',  // Custom background color (semi-transparent green)
+                pointBackgroundColor: '#388e3c',  // Point color
+                pointBorderColor: '#ffffff',  // Point border color
+                pointHoverBackgroundColor: '#ffffff',  // Hover state background color
+                pointHoverBorderColor: '#388e3c',  // Hover state border color
+                fill: true,  // Fill the area under the line
+                tension: 0.4,  // Smoother curves
+                borderWidth: 2,  // Line thickness
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Date',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        },
+                        color: '#000000'  // X-axis title color
+                    },
+                    grid: {
+                        color: '#e0e0e0',  // X-axis grid line color
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Price (₺)',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        },
+                        color: '#000000'  // Y-axis title color
+                    },
+                    grid: {
+                        color: '#e0e0e0',  // Y-axis grid line color
+                    },
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value, index, values) {
+                            return '₺' + value;  // Add $ sign before the value
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        font: {
+                            size: 14,
+                            style: 'italic'
+                        },
+                        color: '#333333'  // Legend text color
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return '₺' + tooltipItem.formattedValue;  // Add $ sign in the tooltip
+                        }
+                    },
+                    backgroundColor: '#ffffff',  // Tooltip background color
+                    titleColor: '#333333',  // Tooltip title color
+                    bodyColor: '#666666',  // Tooltip body text color
+                    borderColor: '#4caf50',  // Tooltip border color
+                    borderWidth: 1  // Tooltip border thickness
+                }
+            }
+        }
+    });
+ 
+
+
+    // start of monthechart 
+  const ctx = document.getElementById('monthlyChart').getContext('2d');
+  const chartData = {{ chart_data|safe }};
+  
+  const months = chartData.months;
+  const usdTotals = chartData.usd_totals;
+  const trTotals = chartData.tr_totals;
+
+  new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: months,
+          datasets: [
+              {
+                  label: 'USD Bills',
+                  data: usdTotals,
+                  backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  borderWidth: 1
+              },
+              {
+                  label: 'TR Bills',
+                  data: trTotals,
+                  backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                  borderColor: 'rgba(153, 102, 255, 1)',
+                  borderWidth: 1
+              }
+          ]
+      },
+      options: {
+          responsive: true,
+          plugins: {
+              legend: {
+                  position: 'top',
+              },
+              title: {
+                  display: true,
+                  text: 'Monthly Total Prices (USD and TR)'
+              }
+          },
+          scales: {
+              y: {
+                  beginAtZero: true
+              }
+          }
+      }
+  });
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+
+
+
+<script>
+  // First Chart (Line Chart)
+const ctxemployePyment = document.getElementById('employePymentsChart').getContext('2d');
+const employePymentsChart = new Chart(ctxemployePyment, {
+  type: 'line',
+  data: {
+      labels: {{ dates_payment|safe }},  // Dates on the X-axis
+      datasets: [{
+          label: 'Price',
+          data: {{ payment_amounts|safe }},  // Prices on the Y-axis
+          borderColor: '#4caf50',  // Custom border color (green)
+          backgroundColor: 'rgba(76, 175, 80, 0.3)',  // Custom background color (semi-transparent green)
+          pointBackgroundColor: '#388e3c',  // Point color
+          pointBorderColor: '#ffffff',  // Point border color
+          pointHoverBackgroundColor: '#ffffff',  // Hover state background color
+          pointHoverBorderColor: '#388e3c',  // Hover state border color
+          fill: true,  // Fill the area under the line
+          tension: 0.4,  // Smoother curves
+          borderWidth: 2,  // Line thickness
+      }]
+  },
+  options: {
+      scales: {
+          x: {
+              title: {
+                  display: true,
+                  text: 'Date',
+                  font: {
+                      size: 16,
+                      weight: 'bold'
+                  },
+                  color: '#000000'  // X-axis title color
+              },
+              grid: {
+                  color: '#e0e0e0',  // X-axis grid line color
+              }
+          },
+          y: {
+              title: {
+                  display: true,
+                  text: 'Price (₺)',
+                  font: {
+                      size: 16,
+                      weight: 'bold'
+                  },
+                  color: '#000000'  // Y-axis title color
+              },
+              grid: {
+                  color: '#e0e0e0',  // Y-axis grid line color
+              },
+              beginAtZero: true,
+              ticks: {
+                  callback: function(value, index, values) {
+                      return '₺' + value;  // Add $ sign before the value
+                  }
+              }
+          }
+      },
+      plugins: {
+          legend: {
+              display: true,
+              position: 'top',
+              labels: {
+                  font: {
+                      size: 14,
+                      style: 'italic'
+                  },
+                  color: '#333333'  // Legend text color
+              }
+          },
+          tooltip: {
+              callbacks: {
+                  label: function(tooltipItem) {
+                      return '₺' + tooltipItem.formattedValue;  // Add $ sign in the tooltip
+                  }
+              },
+              backgroundColor: '#ffffff',  // Tooltip background color
+              titleColor: '#333333',  // Tooltip title color
+              bodyColor: '#666666',  // Tooltip body text color
+              borderColor: '#4caf50',  // Tooltip border color
+              borderWidth: 1  // Tooltip border thickness
+          }
+      }
+  }
+});
+
+
+// Second Chart (Bar Chart for Attendance Count)
+const ctxemployeAttandice = document.getElementById('EmployeAttandince').getContext('2d');
+const EmployeAttandince = new Chart(ctxemployeAttandice, {
+type: 'bar',
+data: {
+labels: {{ dates|safe }},  // Dates on the X-axis
+datasets: [{
+  label: 'Attendance Count',
+  data: {{ attendance_counts|safe }},  // Attendance data
+  backgroundColor: 'rgba(33, 150, 243, 0.7)',  // Blue background for bars
+  borderColor: '#2196F3',
+  borderWidth: 1,
+}]
+},
+options: {
+scales: {
+  x: {
+      title: {
+          display: true,
+          text: 'Date',
+          font: {
+              size: 16,
+              weight: 'bold',
+          },
+      },
+  },
+  y: {
+      title: {
+          display: true,
+          text: 'Count',
+          font: {
+              size: 16,
+              weight: 'bold',
+          },
+      },
+      ticks: {
+          beginAtZero: true,
+          callback: function(value) {
+              return value.toLocaleString();
+          }
+      }
+  }
+},
+responsive: true,
+plugins: {
+  legend: {
+      position: 'top',
+  },
+  tooltip: {
+      callbacks: {
+          label: function(tooltipItem) {
+              return `${tooltipItem.raw} People`;  // Format tooltips with attendance count
+          }
+      }
+  }
+},
+}
+});
+
+
+
+
+// Open Attendance Chart in Modal
+document.getElementById('openAttendanceChart').addEventListener('click', function() {
+// Open the modal
+const attendanceChartModal = new bootstrap.Modal(document.getElementById('attendanceChartModal'));
+attendanceChartModal.show();
+
+// Render the same chart in the modal
+const modalctxemployeAttandice = document.getElementById('attendanceChartModalCanvas').getContext('2d');
+new Chart(modalctxemployeAttandice, {
+type: 'bar',
+data: {
+labels: {{ dates|safe }},
+datasets: [{
+label: 'Attendance Count',
+data: {{ attendance_counts|safe }},
+borderColor: '#ff6347',
+backgroundColor: 'rgba(255, 99, 71, 0.3)',
+borderWidth: 2,
+barPercentage: 0.7,
+}]
+},
+options: {
+scales: {
+x: {
+    title: { display: true, text: 'Date', font: { size: 16, weight: 'bold' } }
+},
+y: {
+    title: { display: true, text: 'Attendance Count', font: { size: 16, weight: 'bold' } },
+    beginAtZero: true,
+}
+},
+plugins: {
+tooltip: {
+    callbacks: {
+        label: function(tooltipItem) {
+            return tooltipItem.raw + " attendees";
+        }
+    }
+}
+}
+}
+});
+});
+</script>
+
+
+
+
+<script>
+  // First Chart (Line Chart)
+const ctxclintPyments = document.getElementById('clintPyments').getContext('2d');
+const clintPyments = new Chart(ctxclintPyments, {
+  type: 'line',
+  data: {
+      labels: {{ dates_pyment|safe }},  // Dates on the X-axis
+      datasets: [{
+          label: 'Price',
+          data: {{ prices_pyment|safe }},  // Prices on the Y-axis
+          borderColor: '#4caf50',  // Custom border color (green)
+          backgroundColor: 'rgba(76, 175, 80, 0.3)',  // Custom background color (semi-transparent green)
+          pointBackgroundColor: '#388e3c',  // Point color
+          pointBorderColor: '#ffffff',  // Point border color
+          pointHoverBackgroundColor: '#ffffff',  // Hover state background color
+          pointHoverBorderColor: '#388e3c',  // Hover state border color
+          fill: true,  // Fill the area under the line
+          tension: 0.4,  // Smoother curves
+          borderWidth: 2,  // Line thickness
+      }]
+  },
+  options: {
+      scales: {
+          x: {
+              title: {
+                  display: true,
+                  text: 'Date',
+                  font: {
+                      size: 16,
+                      weight: 'bold'
+                  },
+                  color: '#000000'  // X-axis title color
+              },
+              grid: {
+                  color: '#e0e0e0',  // X-axis grid line color
+              }
+          },
+          y: {
+              title: {
+                  display: true,
+                  text: 'Price ($)',
+                  font: {
+                      size: 16,
+                      weight: 'bold'
+                  },
+                  color: '#000000'  // Y-axis title color
+              },
+              grid: {
+                  color: '#e0e0e0',  // Y-axis grid line color
+              },
+              beginAtZero: true,
+              ticks: {
+                  callback: function(value, index, values) {
+                      return '₺' + value;  // Add $ sign before the value
+                  }
+              }
+          }
+      },
+      plugins: {
+          legend: {
+              display: true,
+              position: 'top',
+              labels: {
+                  font: {
+                      size: 14,
+                      style: 'italic'
+                  },
+                  color: '#333333'  // Legend text color
+              }
+          },
+          tooltip: {
+              callbacks: {
+                  label: function(tooltipItem) {
+                      return '$' + tooltipItem.formattedValue;  // Add $ sign in the tooltip
+                  }
+              },
+              backgroundColor: '#ffffff',  // Tooltip background color
+              titleColor: '#333333',  // Tooltip title color
+              bodyColor: '#666666',  // Tooltip body text color
+              borderColor: '#4caf50',  // Tooltip border color
+              borderWidth: 1  // Tooltip border thickness
+          }
+      }
+  }
+});
+
+const ctxclintbuying = document.getElementById('clintbuying').getContext('2d');
+const clintbuying = new Chart(ctxclintbuying, {
+  type: 'line',
+  data: {
+      labels: {{ dates_tr|safe }},  // Dates on the X-axis
+      datasets: [{
+          label: 'Price',
+          data: {{ prices_tr|safe }},  // Prices on the Y-axis
+          borderColor: '#edf4f5',  // Custom border color (green)
+          backgroundColor: 'rgba(153, 32, 44 ,0.7)',  // Custom background color (semi-transparent green)
+          pointBackgroundColor: '#388e3c',  // Point color
+          pointBorderColor: '#ffffff',  // Point border color
+          pointHoverBackgroundColor: '#ffffff',  // Hover state background color
+          pointHoverBorderColor: '#388e3c',  // Hover state border color
+          fill: true,  // Fill the area under the line
+          tension: 0.4,  // Smoother curves
+          borderWidth: 2,  // Line thickness
+      }]
+  },
+  options: {
+      scales: {
+          x: {
+              title: {
+                  display: true,
+                  text: 'Date',
+                  font: {
+                      size: 16,
+                      weight: 'bold'
+                  },
+                  color: '#000000'  // X-axis title color
+              },
+              grid: {
+                  color: '#e0e0e0',  // X-axis grid line color
+              }
+          },
+          y: {
+              title: {
+                  display: true,
+                  text: 'Price (₺)',
+                  font: {
+                      size: 16,
+                      weight: 'bold'
+                  },
+                  color: '#000000'  // Y-axis title color
+              },
+              grid: {
+                  color: '#e0e0e0',  // Y-axis grid line color
+              },
+              beginAtZero: true,
+              ticks: {
+                  callback: function(value, index, values) {
+                      return '₺' + value;  // Add $ sign before the value
+                  }
+              }
+          }
+      },
+      plugins: {
+          legend: {
+              display: true,
+              position: 'top',
+              labels: {
+                  font: {
+                      size: 14,
+                      style: 'italic'
+                  },
+                  color: '#333333'  // Legend text color
+              }
+          },
+          tooltip: {
+              callbacks: {
+                  label: function(tooltipItem) {
+                      return '₺' + tooltipItem.formattedValue;  // Add $ sign in the tooltip
+                  }
+              },
+              backgroundColor: '#ffffff',  // Tooltip background color
+              titleColor: '#333333',  // Tooltip title color
+              bodyColor: '#666666',  // Tooltip body text color
+              borderColor: '#4caf50',  // Tooltip border color
+              borderWidth: 1  // Tooltip border thickness
+          }
+      }
+  }
+});
+</script>
+
+</body>
+</html >
+
+{%endblock%}

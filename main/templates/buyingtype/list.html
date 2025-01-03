@@ -1,0 +1,41 @@
+{% extends 'usd_bar.html' %} {% block content %}
+
+<title>Buying Type</title>
+<div class="container">
+  <h1 class="mt-5">Buying Types</h1>
+  <a href="{% url 'buying_type_create' %}" class="btn btn-primary mb-3"
+    >Add New Buying Type</a
+  >
+  <table class="table table-striped table-bordered">
+    <thead class="thead-dark">
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>English Name</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for buying_type in buying_types %}
+      <tr>
+        <td>{{ buying_type.id }}</td>
+        <td>{{ buying_type.name }}</td>
+        <td>{{ buying_type.Name_En }}</td>
+        <td>
+          <a
+            href="{% url 'buying_type_update' buying_type.id %}"
+            class="btn btn-warning btn-sm"
+            >Edit</a
+          >
+          <a
+            href="{% url 'buying_type_delete' buying_type.id %}"
+            class="btn btn-danger btn-sm"
+            >Delete</a
+          >
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

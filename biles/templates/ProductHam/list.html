@@ -1,0 +1,50 @@
+{% extends 'base.html' %} {% block content %} {% load static %}
+
+<div class="container mt-5">
+  <h1 class="text-center mb-4">Product Ham list</h1>
+  <a href="{% url 'addProductham' %}" class="btn btn-info btn-sm"
+    >add Product</a
+  >
+
+  <a href="{% url 'download_ProductHam_csv' %}" class="btn btn-info btn-sm"
+    >export</a
+  >
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Product name</th>
+        <th scope="col">Top Kg</th>
+        <th scope="col">Percentage</th>
+
+        <th scope="col">Actions</th>
+        <!-- Added Actions column for edit/view links download_ProductHam_csv -->
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in ProductHam %}
+      <tr>
+        <th scope="row">{{ i.id }}</th>
+        <td>{{ i.product_name }}</td>
+        <td>{{ i.top }}</td>
+        <td>{{ i.percentage }}</td>
+
+        <td>
+          <a
+            href=" {% url 'fatch_ProductHam' i.id %}"
+            class="btn btn-info btn-sm"
+            >View</a
+          >
+          <a
+            href="{% url 'update_ProductHam' i.id  %}"
+            class="btn btn-info btn-sm"
+            >Edit</a
+          >
+          <!-- Add more actions if needed -->
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

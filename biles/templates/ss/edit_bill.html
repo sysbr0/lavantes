@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Bill</title>
+  </head>
+  <body>
+    <h1>Edit Bill</h1>
+    <form method="post">
+      {% csrf_token %} {{ form.as_p }}
+      <button type="submit">Save Bill</button>
+    </form>
+
+    <h2>Records</h2>
+    <table border="1">
+      <tr>
+        <th>Main Product</th>
+        <th>Amount</th>
+        <th>Price</th>
+        <th>Actions</th>
+      </tr>
+      {% for record in bill.select_UdsBill_inner.all %}
+      <tr>
+        <td>{{ record.main_product }}</td>
+        <td>{{ record.amount }}</td>
+        <td>{{ record.price }}</td>
+        <td>
+          <a href="{% url 'update_record' record.id %}">Edit</a>
+          <a href="{% url 'delete_record' record.id %}">Delete</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4">No records found</td>
+      </tr>
+      {% endfor %}
+    </table>
+    <a href="{% url 'add_record' bill.id %}">Add New Record</a>
+  </body>
+</html>

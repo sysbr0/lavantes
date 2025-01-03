@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bills List</title>
+  </head>
+  <body>
+    <h1>Pending Bills</h1>
+    <ul>
+      {% for bill in bills %}
+      <li>
+        Bill ID: {{ bill.id }}, Customer: {{ bill.customer.name }}, Price: {{
+        bill.price }}
+        <a href="{% url 'mark_bill_done' bill.id %}">Mark as Done</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>

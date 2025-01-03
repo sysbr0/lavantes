@@ -1,0 +1,593 @@
+{% extends 'side_bar.html' %} {% block content %}
+
+<!DOCTYPE html>
+<html lang="ar">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customer History</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+    <style>
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        margin: 0;
+        overflow: hidden; /* Prevent body from scrolling */
+        padding: 10px;
+      }
+
+      .content {
+        flex: 1;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        margin-top: -10px; /* Add space above content on mobile */
+        display: flex;
+        flex-direction: column; /* Stack content vertically */
+        overflow-y: auto; /* Allow scrolling in the content area */
+        height: calc(100vh - 40px); /* Full height minus space for button */
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column; /* Stack elements vertically on mobile */
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 10px;
+        margin-top: -40px;
+      }
+      .Chat-sidebar {
+        background-color: #edf1f5;
+        width: 100%; /* Full width on mobile */
+        max-width: 250px; /* Set a max width for larger screens */
+        padding: 10px;
+        color: black;
+        overflow-y: auto; /* Allow scrolling in the Chat-sidebar */
+        position: relative; /* Set position relative for positioning icon */
+        height: calc(80vh - 40px); /* Full height minus space for button */
+        border-radius: 10px;
+      }
+
+      .customer-list {
+        list-style: none;
+        padding: 0;
+        margin: 0; /* Remove default margin */
+        border-radius: 5px;
+      }
+      .balance {
+        color: red; /* Set balance text color to red */
+      }
+
+      .customer-list li {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        cursor: pointer;
+        width: 100%; /* Ensure list items take full width of the Chat-sidebar */
+        box-sizing: border-box; /* Include padding in width calculations */
+        border-radius: 5px;
+        border: 2px solid transparent;
+      }
+
+      .customer-list li img {
+        width: 40px; /* Adjust image size */
+        height: 40px; /* Adjust image size */
+        border-radius: 50%; /* Make image round */
+        margin-right: 10px; /* Space between image and name */
+      }
+
+      .customer-list li:hover {
+        background-color: #c5d2de;
+      }
+
+      .chat-header {
+        height: 60px;
+
+        display: none; /* Initially hidden until a customer is selected */
+        align-items: center; /* Center items vertically */
+        border-radius: 5px; /* Rounded corners */
+        padding: 10px;
+
+        border: 1px solid #ccc; /* Optional: Border around the message area */
+      }
+
+      #customer-name {
+        text-align: center; /* Center the placeholder message */
+        margin-top: 20px; /* Add some margin for spacing */
+      }
+
+      .chat-header img {
+        width: 40px; /* Adjust the image size */
+        height: 40px; /* Adjust the image size */
+        border-radius: 50%; /* Make the image round */
+        margin-right: 10px; /* Space between image and name */
+      }
+
+      .chat-header h2 {
+        font-size: 1rem; /* Adjust font size for the customer name */
+        margin: 0; /* Remove default margin */
+        color: #333; /* Set color */
+      }
+
+      #history-list {
+        overflow-y: auto; /* Enable vertical scrolling */
+        max-height: 650px; /* Set max height for the messages */
+        padding: 10px; /* Padding inside the message list */
+        margin-top: 10px; /* Space above the message list */
+        border: 1px solid #ccc; /* Optional: Border around the message area */
+        border-radius: 5px; /* Rounded corners */
+      }
+
+      .border {
+        border: 10px solid #ccc; /* Optional: Border around the message area */
+        border-radius: 8px; /* Optional: rounded corners for a softer look */
+        padding: 15px; /* Optional: inner spacing inside the bordered area */
+        border-color: #007bff;
+      }
+
+      .message {
+        padding: 10px 15px;
+        margin: 10px 0;
+        border-radius: 15px;
+        position: relative;
+        max-width: 60%;
+        word-wrap: break-word;
+        border: 2px solid transparent;
+        direction: rtl; /* Set text direction to right-to-left */
+        text-align: right;
+      }
+
+      .bill {
+        background-color: #e9f5e9;
+        margin-right: auto;
+        border-color: #ff9800;
+      }
+
+      .information {
+        display: flex; /* Use flexbox for alignment */
+        flex-direction: column; /* Stack items vertically */
+        align-items: center; /* Center items horizontally */
+        margin: 10px 0; /* Add some vertical spacing */
+      }
+
+      .information h2 {
+        margin: 5px 0; /* Space between the headings */
+        text-align: center; /* Center the text */
+      }
+
+      .payment {
+        background-color: #e0f7fa;
+        margin-left: auto;
+        border-color: #007bff;
+      }
+
+      .customer-info {
+        text-align: center; /* Center the text */
+        margin-bottom: 20px; /* Space between customer info and history list */
+      }
+
+      .customer-info img {
+        width: 80px; /* Size of the profile image */
+        height: 80px; /* Size of the profile image */
+        border-radius: 50%; /* Make image round */
+      }
+
+      .btn-view {
+        color: #007bff;
+        font-weight: bold;
+      }
+
+      .toggle-button {
+        position: fixed; /* Fixed position to stay in the viewport */
+        bottom: 20px; /* Distance from the bottom */
+        right: 20px; /* Distance from the right */
+        z-index: 1000; /* Ensure it's above other elements */
+        background-color: rgba(0, 123, 255, 0.8); /* Slightly transparent */
+        border: none; /* No border */
+        border-radius: 50%; /* Round button */
+        width: 50px; /* Increased width */
+        height: 50px; /* Increased height */
+      }
+
+      .toggle-button img {
+        width: 30px; /* Larger icon size */
+        height: 30px; /* Larger icon size */
+      }
+
+      @media (max-width: 767px) {
+        .toggle-button {
+          display: block; /* Show toggle button on mobile */
+        }
+        .Chat-sidebar {
+          display: none; /* Hide Chat-sidebar on mobile */
+        }
+      }
+
+      @media (min-width: 768px) {
+        .container {
+          flex-direction: row; /* Side by side layout on larger screens */
+        }
+        .Chat-sidebar {
+          width: 250px; /* Chat-sidebar width for larger screens */
+          height: 100vh;
+        }
+        .content {
+          margin-left: 20px;
+        }
+        .message {
+          max-width: 80%;
+        }
+      }
+
+      @media (max-width: 767px) {
+        body {
+          font-size: 14px; /* Adjust font size for mobile */
+        }
+
+        .message {
+          max-width: 90%;
+        }
+
+        .container {
+          margin-top: -50px;
+          max-width: 100%;
+          padding: 1px;
+        }
+
+        .customer-info img {
+          width: 60px; /* Smaller profile image on mobile */
+          height: 60px; /* Smaller profile image on mobile */
+        }
+
+        .chat-header {
+          margin-left: 35px;
+        }
+
+        .chat-header img {
+          width: 30px; /* Smaller chat header image */
+          height: 30px; /* Smaller chat header image */
+        }
+
+        .message {
+          padding: 8px 12px; /* Adjust padding for mobile */
+          font-size: 14px; /* Adjust font size for messages */
+        }
+
+        .toggle-button img {
+          width: 20px; /* Smaller icon size */
+          height: 20px; /* Smaller icon size */
+        }
+
+        .content {
+          max-height: 95%;
+        }
+      }
+
+      @media (min-width: 768px) {
+        .customer-list li {
+          padding: 15px; /* More padding on larger screens */
+        }
+
+        .chat-header img {
+          width: 40px; /* Standard chat header image size */
+          height: 40px; /* Standard chat header image size */
+        }
+      }
+
+      /* Mobile-specific styles */
+      @media (max-width: 767px) {
+        .Chat-sidebar {
+          position: fixed; /* Fix position to overlay content */
+          top: 60px; /* Align to the top */
+          left: 10px; /* Align to the left */
+          width: 100%; /* Full width */
+          height: 100vh; /* Full height */
+          background-color: rgba(
+            237,
+            241,
+            245,
+            0.95
+          ); /* Slightly transparent background */
+          z-index: 1000; /* Ensure it's above other elements */
+          display: none; /* Initially hidden */
+          padding: 10px; /* Padding for content inside Chat-sidebar */
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Optional shadow for better visibility */
+        }
+        .content {
+          margin-top: -25px; /* Add space above content on mobile */
+        }
+
+        .customer-list {
+          padding: 0; /* Remove default padding */
+          margin: 0; /* Remove default margin */
+
+          overflow-y: auto;
+
+          scrollbar-width: none; /* Hide scrollbar for Firefox */
+          -ms-overflow-style: none;
+        }
+
+        .customer-list::-webkit-scrollbar {
+          display: none; /* Hide scrollbar for Chrome, Safari, and other WebKit browsers */
+        }
+
+        .customer-list li {
+          padding: 15px; /* Add padding for touch targets */
+          cursor: pointer; /* Indicate clickable items */
+          border-bottom: 1px solid #ddd; /* Optional: separator between items */
+        }
+
+        .toggle-button {
+          position: fixed; /* Fixed position to stay in the viewport */
+          bottom: 20px; /* Distance from the bottom */
+          right: 20px; /* Distance from the right */
+          z-index: 1001; /* Ensure it's above the Chat-sidebar */
+          background-color: rgba(0, 123, 255, 0.8); /* Slightly transparent */
+          border: none; /* No border */
+          border-radius: 50%; /* Round button */
+          width: 50px; /* Increased width */
+          height: 50px; /* Increased height */
+          display: flex; /* Flexbox for centering icon */
+          align-items: center; /* Center vertically */
+          justify-content: center; /* Center horizontally */
+        }
+
+        .toggle-button img {
+          width: 30px; /* Adjust icon size */
+          height: 30px; /* Adjust icon size */
+        }
+      }
+    </style>
+    <style>
+      .search-form {
+        display: flex;
+        align-items: center;
+        border: 2px solid #3b82f6; /* Blue border */
+        border-radius: 8px;
+      }
+
+      .search-input {
+        padding: 10px 16px;
+        width: 100%;
+        border: none;
+        outline: none;
+        border-radius: 8px 0 0 8px;
+        font-size: 16px;
+      }
+
+      .search-input:focus {
+        border-radius: 8px 0 0 8px;
+        box-shadow: 0 0 0 2px #3b82f6; /* Blue focus ring */
+      }
+
+      .search-button {
+        background-color: #edf1f5;
+        color: #3b82f6;
+        padding: 10px 16px;
+        border: none;
+        border-radius: 0 8px 8px 0;
+        cursor: pointer;
+      }
+
+      .search-button:hover {
+        background-color: #2563eb; /* Darker blue on hover */
+      }
+
+      .search-button:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px #3b82f6; /* Blue focus ring */
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <!-- Toggle Button -->
+      <button
+        id="toggle-button"
+        onclick="toggleCustomerList()"
+        class="toggle-button"
+      >
+        <i class="bi bi-people-fill"></i>
+      </button>
+
+      <!-- Chat-sidebar -->
+      <div class="Chat-sidebar" id="customer-Chat-sidebar">
+        <h4>العملاء</h4>
+        <form
+          method="get"
+          action="{% url 'customer_list_tl' %}"
+          class="search-form"
+        >
+          <input
+            type="text"
+            name="q"
+            value="{{ query }}"
+            placeholder="Search"
+            oninput="searchCustomers(event)"
+            class="search-input"
+          />
+          <button type="submit" class="search-button">
+            <i class="bi bi-search"></i>
+          </button>
+        </form>
+
+        <ul class="customer-list">
+          {% for customer in customers %}
+          <li onclick="loadCustomerHistory({{ customer.id }})">
+            {% if customer.profile_image %}
+            <img
+              src="{{ customer.profile_image.url }}"
+              alt="{{ customer.name }}'s profile image"
+              style="
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                margin-right: 10px;
+              "
+            />
+            {% else %}
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/3686/3686930.png"
+              alt="Default profile image"
+              style="
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                margin-right: 10px;
+              "
+            />
+            {% endif %}
+            <span>{{ customer.name }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="content">
+        <div class="chat-header" id="chat-header" style="display: none">
+          <img
+            id="customer-header-image"
+            src=""
+            alt="Customer's image"
+            onclick="viewCustomer()"
+          />
+
+          <div class="information">
+            <h2 id="customer-header-name"></h2>
+            <h2 id="balane"></h2>
+          </div>
+
+          <button
+            id="view-button"
+            class="btn btn-primary"
+            onclick="pyment()"
+            style="margin-left: auto"
+          >
+            <i class="bi bi-coin"></i> دفعة
+          </button>
+        </div>
+        <h1 id="customer-name" style="text-align: center; display: block">
+          اختر عميل لعرض التفاصيل
+        </h1>
+        <div id="history-list" style="display: none">
+          <!-- Customer's bills and payments will appear here -->
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let currentCustomerId = null; // Variable to store the current customer ID
+      let customerListVisible = false; // Variable to track the visibility of the customer list
+
+      async function loadCustomerHistory(customerId) {
+        try {
+          const response = await fetch(`/customers/chattl/${customerId}/`);
+          if (!response.ok) throw new Error("Network response was not ok");
+          const data = await response.json();
+
+          document.getElementById("history-list").innerHTML = ""; // Clear previous history
+
+          // Update the header with the customer info
+          document.getElementById("customer-header-image").src =
+            data.customer.profile_image;
+          document.getElementById("customer-header-name").textContent =
+            data.customer.name;
+
+          document.getElementById("balane").textContent =
+            data.customer.balance + " ₺";
+
+          // Update the current customer ID
+          currentCustomerId = customerId; // Store the current customer ID
+
+          // Show the chat header and hide the placeholder message
+          document.getElementById("chat-header").style.display = "flex";
+          document.getElementById("customer-name").style.display = "none";
+          document.getElementById("history-list").style.display = "block"; // Show the history list
+
+          // Check if there are any bills or payments
+          if (data.items.length === 0) {
+            // Display message if there are no transactions
+            document.getElementById("").innerHTML = `
+              <div style="text-align: center; padding: 20px; color: #666;">
+                لا يوجد اي معاملات الى الان
+              </div>
+            `;
+          } else {
+            // Populate the history list with transactions
+            data.items.forEach((item) => {
+              const messageDiv = document.createElement("div");
+              messageDiv.classList.add("message", item.type);
+              messageDiv.innerHTML = `
+                <h6>المعرف : ${item.id}</h6>
+                <p><strong>التاريخ:</strong> ${item.date}</p>
+                <p><strong>التفاصيل:</strong> ${item.message}</p>
+                ${
+                  item.type === "bill"
+                    ? `<a href="/biles/tr/${item.id}" class="btn-view">عرض الفاتورة</a>`
+                    : ""
+                }
+              `;
+              document.getElementById("history-list").appendChild(messageDiv);
+            });
+          }
+
+          // Scroll to the bottom of the history list after loading new messages
+          const historyList = document.getElementById("history-list");
+          historyList.scrollTop = historyList.scrollHeight;
+
+          // Hide the Chat-sidebar on mobile after selecting a customer
+          if (window.innerWidth <= 767) {
+            // Check if the screen width is less than or equal to 767px
+            toggleCustomerList(); // Call the function to hide the Chat-sidebar
+          }
+        } catch (error) {
+          console.error("Error loading customer history:", error);
+        }
+      }
+
+      function viewCustomer() {
+        if (currentCustomerId) {
+          window.location.href = `/customers/${currentCustomerId}`; // Navigate to the customer's page
+        }
+      }
+
+      function pyment() {
+        if (currentCustomerId) {
+          window.location.href = `/customers/payment/tl/${currentCustomerId}`; // Navigate to the customer's page
+        }
+      }
+
+      function toggleCustomerList() {
+        const customerList = document.getElementById("customer-Chat-sidebar");
+        customerListVisible = !customerListVisible;
+        customerList.style.display = customerListVisible ? "block" : "none"; // Show or hide the Chat-sidebar
+      }
+
+      function searchCustomers(event) {
+        const query = event.target.value;
+        const params = new URLSearchParams(window.location.search);
+        params.set("q", query);
+        const newUrl = `${window.location.pathname}?${params.toString()}`;
+        window.history.pushState({}, "", newUrl);
+        fetch(newUrl)
+          .then((response) => response.text())
+          .then((html) => {
+            document.querySelector("table tbody").innerHTML = new DOMParser()
+              .parseFromString(html, "text/html")
+              .querySelector("table tbody").innerHTML;
+          });
+      }
+    </script>
+  </body>
+</html>
+
+{%endblock%}

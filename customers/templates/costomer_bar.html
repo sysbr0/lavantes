@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Sidebar Layout</title>
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,500"
+      rel="stylesheet"
+    />
+
+    <!-- Material Design Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css"
+    />
+
+    <style>
+      /* General Styles */
+      body {
+        font-family: "Roboto", sans-serif;
+        font-size: 16px;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+      }
+
+      /* Viewport */
+      #viewport {
+        padding-left: 250px;
+        transition: all 0.5s ease;
+      }
+
+      /* Content */
+      #content {
+        width: 100%;
+        margin-right: 0;
+        position: relative;
+      }
+
+      /* Sidebar */
+      #sidebar {
+        position: fixed;
+        left: 0;
+        width: 250px;
+        height: 100%;
+        background: #37474f;
+        overflow-y: auto;
+        transition: all 0.5s ease;
+      }
+
+      /* Sidebar Header */
+      #sidebar header {
+        background-color: #263238;
+        text-align: center;
+        line-height: 52px;
+        font-size: 20px;
+      }
+
+      #sidebar header a {
+        color: #fff;
+        text-decoration: none;
+        display: block;
+      }
+
+      /* Sidebar Navigation */
+      #sidebar .nav {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      #sidebar .nav li {
+        border-bottom: 1px solid #455a64;
+      }
+
+      #sidebar .nav a {
+        display: flex;
+        align-items: center;
+        color: #cfd8dc;
+        padding: 16px 24px;
+        font-size: 14px;
+        text-decoration: none;
+        transition: background 0.3s ease, color 0.3s ease;
+      }
+
+      #sidebar .nav a:hover {
+        background-color: #455a64;
+        color: #eceff1;
+      }
+
+      #sidebar .nav a i {
+        margin-right: 16px;
+      }
+
+      /* Navbar */
+      .navbar {
+        margin-bottom: 0;
+        border: none;
+      }
+
+      .navbar .container-fluid {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+      }
+
+      .navbar .nav {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .navbar .nav li {
+        display: inline;
+        margin-left: 10px;
+      }
+
+      .navbar .nav li a {
+        color: #333;
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .navbar .nav li a:hover {
+        color: #007bff;
+      }
+
+      /* User Image */
+      .navbar .nav img {
+        border-radius: 50%;
+        height: 30px;
+        width: 30px;
+        object-fit: cover;
+        margin-left: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="viewport">
+      <!-- Sidebar -->
+      <div id="sidebar">
+        <header>
+          <a href="#">My App</a>
+        </header>
+        <ul class="nav">
+          <li>
+            <a href="#"> <i class="mdi mdi-view-dashboard"></i> Dashboard </a>
+          </li>
+          <li>
+            <a href="#"> <i class="mdi mdi-link-variant"></i> Shortcuts </a>
+          </li>
+          <li>
+            <a href="#"> <i class="mdi mdi-widgets"></i> Overview </a>
+          </li>
+          <li>
+            <a href="#"> <i class="mdi mdi-calendar"></i> Events </a>
+          </li>
+          <li>
+            <a href="#"> <i class="mdi mdi-information-outline"></i> About </a>
+          </li>
+          <li>
+            <a href="#"> <i class="mdi mdi-cog-outline"></i> Services </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class="mdi mdi-comment-multiple-outline"></i> Contact
+            </a>
+          </li>
+        </ul>
+      </div>
+      <!-- Content -->
+      <div id="content">
+        <nav class="navbar navbar-default">
+          <div class="container-fluid">
+            <ul class="nav navbar-nav navbar-right">
+              <li>
+                <a href="#"><i class="mdi mdi-bell text-danger"></i></a>
+              </li>
+              <li>
+                <a href="#"
+                  ><img
+                    src="https://cdn-icons-png.freepik.com/512/7718/7718888.png"
+                    alt="User Image"
+                /></a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+        <div class="container-fluid">
+          <h1>Simple Sidebar</h1>
+          <p>
+            Make sure to keep all page content within the
+            <code>#content</code>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

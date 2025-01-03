@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMfpJ/HjCw3jOiqIriCW7LJRz1kCJD7UpLM35wu"
+      crossorigin="anonymous"
+    />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* Sidebar styles */
+      #sidebar {
+        height: 100%;
+        width: 250px;
+        position: fixed;
+        top: 0;
+        left: 0; /* Default position */
+        background-color: #343a40;
+        color: white;
+        overflow-x: hidden;
+        transition: all 0.3s ease;
+        padding-top: 60px;
+        z-index: 1000;
+      }
+
+      #sidebar.collapsed {
+        left: -250px; /* Hide sidebar when collapsed */
+      }
+
+      #sidebar ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      #sidebar ul li {
+        padding: 10px 20px;
+      }
+
+      #sidebar ul li a {
+        color: white;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+      }
+
+      #sidebar ul li a:hover {
+        background-color: #495057;
+      }
+
+      #sidebar ul li a .bi {
+        margin-right: 10px;
+      }
+
+      /* Sub-menu */
+      #sidebar ul li ul {
+        list-style-type: none;
+        padding-left: 20px;
+        display: none;
+      }
+
+      #sidebar ul li ul.active {
+        display: block;
+      }
+
+      /* Main content adjustment */
+      #content {
+        transition: margin-left 0.3s ease;
+        margin-left: 250px; /* Adjust this value to match the sidebar width */
+        width: calc(100% - 250px); /* Adjust width when sidebar is visible */
+      }
+
+      #content.collapsed {
+        margin-left: 0;
+        width: 100%; /* Full width when sidebar is hidden */
+      }
+
+      /* Responsive Design */
+      @media (max-width: 767px) {
+        #sidebar {
+          left: -250px; /* Hide sidebar by default on mobile */
+        }
+
+        #sidebar.collapsed {
+          left: 0;
+        }
+
+        #content {
+          margin-left: 0; /* No margin on mobile */
+          width: 100%; /* Full width on mobile */
+        }
+      }
+
+      /* Toggle Button */
+      #sidebarToggle {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1100; /* Ensure it's above other content */
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Toggle Button -->
+    <button id="sidebarToggle" class="btn btn-primary">
+      <i class="bi bi-list"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+      <ul>
+        <li>
+          <a href="{% url 'dashboard' %}">
+            <i class="bi bi-house"></i> Dashboard
+          </a>
+        </li>
+        <li class="sidebar-collapsible">
+          <a href="#"> <i class="bi bi-people"></i> costomers </a>
+          <ul>
+            <li><a href="">Add Employee</a></li>
+            <li><a href="#">Manage Employees</a></li>
+          </ul>
+        </li>
+        <li class="sidebar-collapsible">
+          <a href="#"> <i class="bi bi-people"></i> Employees </a>
+          <ul>
+            <li><a href="">Add Employee</a></li>
+            <li><a href="#">Manage Employees</a></li>
+          </ul>
+        </li>
+        <li class="sidebar-collapsible">
+          <a href="#"> <i class="bi bi-people"></i> clints </a>
+          <ul>
+            <li><a href="">Add Employee</a></li>
+            <li><a href="#">Manage Employees</a></li>
+          </ul>
+        </li>
+        <li class="sidebar-collapsible">
+          <a href="#"><i class="bi bi-calendar-check"></i> Attendance</a>
+          <ul>
+            <li><a href="#">View Attendance</a></li>
+            <li><a href="#">Record Attendance</a></li>
+          </ul>
+        </li>
+        <li class="sidebar-collapsible">
+          <a href="#">
+            <i class="bi bi-currency-dollar"></i> Financial Summary
+          </a>
+          <ul>
+            <li><a href="{%url  'fetch_bills_list_usd' %}">USD slels</a></li>
+            <li><a href="#">TR sels</a></li>
+          </ul>
+        </li>
+
+        <li class="sidebar-collapsible">
+          <a href="#"> <i class="bi bi-shop"></i> Materials </a>
+          <ul>
+            <li><a href="{%url  'material-list' %}">Main</a></li>
+            <li><a href="{%url  'raw_materials_list' %}">Raw Materials</a></li>
+          </ul>
+        </li>
+
+        <li class="sidebar-collapsible">
+          <a href="#"> <i class="bi bi-house-up-fill"></i> Buying </a>
+          <ul>
+            <li>
+              <a href="{%url  'general_buying_list' %}"
+                ><i class="bi bi-layout-text-sidebar-reverse"></i>list</a
+              >
+            </li>
+            <li>
+              <a href="{%url  'create_general_buying' %}"
+                ><i class="bi bi-plus-circle-fill"></i>add</a
+              >
+            </li>
+          </ul>
+        </li>
+
+        <li>
+          <a href="#"><i class="bi bi-bar-chart"></i> Reports</a>
+        </li>
+        <li>
+          <a href="#"><i class="bi bi-gear"></i> Settings</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div id="content" class="container mt-5">
+      {% block content %}
+      <!-- Content of each page will go here -->
+      {% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Toggle sidebar visibility
+        document
+          .getElementById("sidebarToggle")
+          .addEventListener("click", function () {
+            document.getElementById("sidebar").classList.toggle("collapsed");
+            document.getElementById("content").classList.toggle("collapsed");
+          });
+
+        // Toggle sub-menus
+        document
+          .querySelectorAll(".sidebar-collapsible > a")
+          .forEach(function (collapsible) {
+            collapsible.addEventListener("click", function () {
+              collapsible.classList.toggle("active");
+              const subMenu = collapsible.nextElementSibling;
+              if (subMenu && subMenu.tagName === "UL") {
+                subMenu.classList.toggle("active");
+              }
+            });
+          });
+      });
+    </script>
+  </body>
+</html>

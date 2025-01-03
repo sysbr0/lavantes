@@ -1,0 +1,162 @@
+{% extends 'base.html' %} {% block content %}
+<style>
+  .card-header {
+    display: flex;
+    felx-diraction: row;
+    justify-content: space-between;
+  }
+
+  /* Modal styles */
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Black with opacity */
+    overflow: auto;
+  }
+  .conform-bottons {
+    padding: 10px;
+    justify-content: center;
+    align-item: center;
+  }
+
+  .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    max-width: 400px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Close button */
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  /* Button styles */
+  .btn {
+    padding: 10px 20px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+    color: white;
+  }
+
+  .btn-danger:hover {
+    background-color: #c82333;
+  }
+
+  .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+  }
+
+  .btn-secondary:hover {
+    background-color: #5a6268;
+  }
+</style>
+
+<div class="container mt-5">
+  <h1 class="text-center mb-4">Client Details</h1>
+  <div class="card">
+    <div class="card-header">
+      <h2>{{ clint.clint_name }}</h2>
+      <form
+        id="deleteForm"
+        method="post"
+        action="{% url 'fatch_clint' clint.id %}"
+      >
+        {% csrf_token %}
+        <button
+          type="button"
+          class="btn btn-danger mt-3"
+          onclick="showDeleteConfirmation()"
+        >
+          Delete Client
+        </button>
+        <a href="{% url 'clints' %}" class="btn btn-secondary mt-3"
+          >Back to Client List</a
+        >
+      </form>
+
+      <a href="{% url 'update_clint' clint.id %}" class="btn btn-primary mt-3"
+        >Edit</a
+      >
+    </div>
+    <div class="card-body">
+      <p><strong>ID:</strong> {{ clint.id }}</p>
+      <p><strong>Name:</strong> {{ clint.clint_name }}</p>
+      <p><strong>English name:</strong> {{ clint.clint_tr_name }}</p>
+      <p><strong>Email:</strong> {{ clint.clint_email }}</p>
+      <p><strong>Contact Number:</strong> {{ clint.c_number }}</p>
+      <p><strong>Source:</strong> {{ clint.c_sorce }}</p>
+      <p><strong>Is Company:</strong> {{ clint.is_company|yesno:"Yes,No" }}</p>
+      <p><strong>IBAN:</strong> {{ clint.clint_iban }}</p>
+      <p>
+        <strong>Image:</strong>
+        {% if clint.image %}
+        <img
+          src="{{ clint.image }}"
+          alt="Client Image"
+          class="img-thumbnail"
+          style="max-width: 200px"
+        />
+        {% else %} N/A {% endif %}
+      </p>
+    </div>
+  </div>
+  <div class="mt-4 text-center"></div>
+
+  <div id="confirmModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <p>Are you sure you want to delete client '{{ clint.clint_name }}'?</p>
+      <input type="hidden" name="delete" />
+      <div class="conform-bottons">
+        <button type="submit" form="deleteForm" class="btn btn-danger">
+          Confirm Delete
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="closeModal()">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Show confirmation modal
+  function showDeleteConfirmation() {
+    var modal = document.getElementById("confirmModal");
+    modal.style.display = "block";
+  }
+
+  // Close modal
+  function closeModal() {
+    var modal = document.getElementById("confirmModal");
+    modal.style.display = "none";
+  }
+</script>
+{% endblock %}

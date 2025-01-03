@@ -1,0 +1,46 @@
+{% extends 'usd_bar.html' %} {% block content %} {% load static %}
+
+<div class="container mt-5">
+  <h1 class="text-center mb-4">product List</h1>
+  <a href="{% url 'addProduct' %}" class="btn btn-info btn-sm">add product</a>
+
+  <a href="{% url 'download_Product_csv' %}" class="btn btn-info btn-sm"
+    >export</a
+  >
+
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">Ham</th>
+        <th scope="col">Net weight</th>
+        <th scope="col">Top weight</th>
+
+        <th scope="col">Actions</th>
+        <!-- Added Actions column for edit/view links -->
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in form %}
+      <tr>
+        <th scope="row">{{ i.qr }}</th>
+        <td>{{ i }}</td>
+        <td>{{ i.product_ham }}</td>
+        <td>{{ i.net_weight }}</td>
+        <td>{{ i.top_weight }}</td>
+
+        <td>
+          <a href="{% url 'fatch_Product' i.qr %}" class="btn btn-info btn-sm"
+            >View</a
+          >
+          <a href="{% url 'update_Product' i.qr %}" class="btn btn-info btn-sm"
+            >Edit</a
+          >
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

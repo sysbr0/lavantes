@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TrBills Data</title>
+  </head>
+  <body>
+    <h1>TrBills Data</h1>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>Price</th>
+          <th>Net</th>
+          <th>Top</th>
+          <th>Paid</th>
+          <th>Done</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for record in data %}
+        <tr>
+          <td>{{ record.price }}</td>
+          <td>{{ record.net }}</td>
+          <td>{{ record.top }}</td>
+          <td>{{ record.is_paid }}</td>
+          <td>{{ record.done }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>

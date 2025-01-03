@@ -1,0 +1,192 @@
+{% extends 'navbar_costomer.html' %} {% block content %}
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit Customer</title>
+
+  <style>
+    #success_message {
+      display: none;
+    }
+    .has-error .help-block {
+      color: red;
+    }
+    .inputGroupContainer .input-group .form-control {
+      width: 100%; /* Make the input field take full width */
+      font-size: 16px; /* Adjust font size as needed */
+    }
+    .font_size {
+      font-size: 16px;
+    }
+    .custom-width {
+      width: 20rem;
+    }
+
+    .custom-hight {
+      height: 80px;
+      /font-size: 1px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container mx-auto p-4">
+    <div class="flex items-center justify-center min-h-screen">
+      <div class="text-center">
+        <form method="post" enctype="multipart/form-data">
+          <div class="flex flex-col items-center">
+            <!-- Profile Image with Camera Icon -->
+            <div class="relative inline-block mb-4">
+              <img
+                id="profileImage"
+                class="rounded-full border-4 border-blue-500 cursor-pointer"
+                src="{% if customer.profile_image %}{{ customer.profile_image.url }}{% else %}https://cdn-icons-png.freepik.com/512/7718/7718888.png{% endif %}"
+                alt="user photo"
+                height="100"
+                width="100"
+              />
+              <div class="absolute inset-0 flex items-center justify-center">
+                <label for="profileImageUpload" class="cursor-pointer">
+                  <i class="fa-solid fa-camera text-black text-2xl"></i>
+                </label>
+              </div>
+              <!-- Hidden File Input -->
+              <input
+                type="file"
+                id="profileImageUpload"
+                name="profile_image"
+                class="hidden"
+                accept="image/*"
+                onchange="loadFile(event)"
+              />
+            </div>
+            <!-- CSRF Token and Styled Submit Button -->
+            {% csrf_token %}
+
+            <!-- Name -->
+            <div
+              class="form-group {% if form.name.errors %}has-error{% endif %}"
+            >
+              <label class="col-md-4 control-label"
+                >{{ form.name.label }}</label
+              >
+              <div class="col-md-4 inputGroupContainer">
+                <div class="input-group">
+                  <span class="input-group-addon"
+                    ><i class="glyphicon glyphicon-user"></i
+                  ></span>
+                  {{ form.name }}
+                </div>
+                {% for error in form.name.errors %}
+                <span class="help-block">{{ error }}</span>
+                {% endfor %}
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div
+              class="form-group {% if form.email.errors %}has-error{% endif %}"
+            >
+              <label class="col-md-4 control-label"
+                >{{ form.email.label }}</label
+              >
+              <div class="col-md-4 inputGroupContainer">
+                <div class="input-group">
+                  <span class="input-group-addon"
+                    ><i class="glyphicon glyphicon-envelope"></i
+                  ></span>
+                  {{ form.email }}
+                </div>
+                {% for error in form.email.errors %}
+                <span class="help-block">{{ error }}</span>
+                {% endfor %}
+              </div>
+            </div>
+
+            <!-- Contact Number -->
+            <div
+              class="form-group {% if form.number.errors %}has-error{% endif %}"
+            >
+              <label class="col-md-4 control-label"
+                >{{ form.number.label }}</label
+              >
+              <div class="col-md-4 inputGroupContainer">
+                <div class="input-group">
+                  <span class="input-group-addon"
+                    ><i class="glyphicon glyphicon-earphone"></i
+                  ></span>
+                  {{ form.number }}
+                </div>
+                {% for error in form.number.errors %}
+                <span class="help-block">{{ error }}</span>
+                {% endfor %}
+              </div>
+            </div>
+
+            <!-- Address -->
+            <div
+              class="form-group {% if form.address.errors %}has-error{% endif %}"
+            >
+              <label class="col-md-4 control-label"
+                >{{ form.address.label }}</label
+              >
+              <div class="col-md-4 inputGroupContainer">
+                <div class="input-group">
+                  <span class="input-group-addon"
+                    ><i class="glyphicon glyphicon-home"></i
+                  ></span>
+                  {{ form.address }}
+                </div>
+                {% for error in form.address.errors %}
+                <span class="help-block">{{ error }}</span>
+                {% endfor %}
+              </div>
+            </div>
+
+            <!-- Company -->
+            <div
+              class="form-group {% if form.company.errors %}has-error{% endif %}"
+            >
+              <label class="col-md-4 control-label"
+                >{{ form.company.label }}</label
+              >
+              <div class="col-md-4 inputGroupContainer">
+                <div class="input-group">
+                  <span class="input-group-addon"
+                    ><i class="glyphicon glyphicon-briefcase"></i
+                  ></span>
+                  {{ form.company }}
+                </div>
+                {% for error in form.company.errors %}
+                <span class="help-block">{{ error }}</span>
+                {% endfor %}
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              class="bg-black text-white rounded-full px-4 py-2 mt-4 bg-gray-800"
+            >
+              Save Image
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- JavaScript for Image Preview -->
+    <script>
+      function loadFile(event) {
+        var output = document.getElementById("profileImage");
+        output.src = URL.createObjectURL(event.target.files[0]);
+        output.onload = function () {
+          URL.revokeObjectURL(output.src); // Free memory
+        };
+      }
+    </script>
+    {% endblock %}
+  </div>
+</body>

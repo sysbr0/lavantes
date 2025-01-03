@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Attendance Panel</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+    />
+    {% load static %}
+    <style>
+      /* Center the popup in the middle of the page */
+      #popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%); /* Centers the popup */
+        background-color: #d1e7dd;
+        color: #0f5132;
+        border: 1px solid #badbcc;
+        padding: 20px;
+        border-radius: 8px;
+        display: none;
+        z-index: 1000;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: Adds shadow to the popup */
+      }
+
+      /* Hide audio controls */
+    </style>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1>Today's Attendance</h1>
+      <ul id="attendance-list" class="list-group"></ul>
+    </div>
+    <div id="popup"></div>
+
+    <!-- Success sound (hidden controls) -->
+    <audio id="success-sound" preload="auto">
+      <source src="{% static 'audio/success.mp3' %}" type="audio/mp3" />
+      Your browser does not support the audio element.
+    </audio>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+      let displayedEmployees = []; // To store the list of currently displayed employee IDs or names.
+      let soundPlayed = false; // Flag to track if the sound has been played for new records.
+
+      const fetchAttendance = () => {
+        $.getJSON("/employe/attendance/json/", (data) => {
+          const list = $("#attendance-list");
+          list.empty();
+          data.forEach((record) => {
+            list.append(
+              `<li class="list-group-item">
+                  ${record.employee__name} - ${record.status} (Added by: ${record.created_by_admin})
+                </li>`
+            );
+          });
+
+          // Update the displayed employees list.
+          displayedEmployees = data.map((record) => record.employee__name);
+        });
+      };
+
+      const showPopup = (message) => {
+        const popup = $("#popup");
+        popup.text(message);
+        popup.fadeIn();
+
+        // Play the success sound
+        const successSound = $("#success-sound")[0];
+        successSound.play().catch((error) => {
+          console.error("Audio play failed:", error);
+        });
+
+        setTimeout(() => {
+          popup.fadeOut();
+        }, 3000);
+      };
+
+      // Fetch attendance on page load
+      fetchAttendance();
+
+      // Poll the server every 5 seconds for new records
+      setInterval(() => {
+        $.getJSON("/employe/attendance/json/", (data) => {
+          const newRecords = data.filter(
+            (record) => !displayedEmployees.includes(record.employee__name)
+          );
+
+          // Only trigger the sound and popup when new records are found and the sound hasn't been played yet
+          if (newRecords.length > 0 && !soundPlayed) {
+            newRecords.forEach((record) => {
+              showPopup(`New attendance record: ${record.employee__name}`);
+              soundPlayed = true;
+            });
+
+            // Play the sound only once when new records are found
+            const successSound = $("#success-sound")[0];
+            successSound.play().catch((error) => {
+              console.error("Audio play failed:", error);
+            });
+
+            // Set flag to prevent playing sound again for the same batch of records
+            fetchAttendance(); // Refresh the list to show the new records.
+          } else if (newRecords.length === 0) {
+            soundPlayed = false; // Reset the flag when no new records are found
+          }
+        });
+      }, 5000);
+    </script>
+  </body>
+</html>

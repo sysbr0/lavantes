@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Update Record</title>
+  </head>
+  <body>
+    <h1>Update Record</h1>
+    <form method="post">
+      {% csrf_token %} {{ form.as_p }}
+      <button type="submit">Update Record</button>
+    </form>
+    <a href="{% url 'edit_bill' record.uds_bill.id %}">Back to Bill</a>
+  </body>
+</html>

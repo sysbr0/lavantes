@@ -1,0 +1,222 @@
+{% extends 'side_bar.html' %} {% block content %}
+
+<style>
+  .card {
+    width: 100%; /* Ensure cards are responsive */
+  }
+
+  @media (min-width: 768px) {
+    .container {
+      padding: 0 30px;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .container {
+      padding: 0 60px;
+    }
+  }
+
+  /* Responsive container for the chart */
+  .embed-responsive {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+  }
+
+  .embed-responsive .chart {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (max-width: 767px) {
+    .embed-responsive .chart {
+      height: 300px; /* Increased height for mobile */
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 991px) {
+    .embed-responsive .chart {
+      height: 300px; /* Default height for tablets */
+    }
+  }
+
+  @media (min-width: 992px) {
+    .embed-responsive .chart {
+      height: 400px; /* Larger height for desktops */
+    }
+  }
+
+  /* Print styles */
+  @media print {
+    .container {
+      padding: 0;
+    }
+
+    .embed-responsive {
+      padding-bottom: 56.25%; /* Ensure aspect ratio for print */
+    }
+
+    .embed-responsive .chart {
+      height: 500px; /* Height for print view */
+      width: 100%;
+    }
+
+    /* Ensure cards are in a single row in print view */
+    .row {
+      display: flex;
+      flex-wrap: nowrap;
+    }
+
+    .col-md-4 {
+      flex: 1;
+      margin-bottom: 15px; /* Adjust margin as needed */
+    }
+
+    /* Hide mobile-specific styles in print view */
+    @media (max-width: 767px) {
+      .embed-responsive .chart {
+        height: 0; /* Hide mobile height */
+      }
+    }
+  }
+
+  /* Separate card and graph sections */
+  .card-section {
+    margin-bottom: 30px; /* Space between card sections */
+  }
+
+  .graph-section {
+    margin-bottom: 30px; /* Space between graph sections */
+  }
+</style>
+
+<div class="container mt-5">
+  <h1 class="mb-4">Dashboard</h1>
+
+  <!-- Card Section -->
+  <div class="card-section">
+    <div class="row">
+      <!-- Employees Summary -->
+      <div class="col-md-4 mb-3">
+        <div class="card text-white bg-primary">
+          <div class="card-header">Employees</div>
+          <div class="card-body">
+            <h5 class="card-title">Total Employees: {{ total_employees }}</h5>
+            <p class="card-text">Active: {{ active_employees }}</p>
+            <p class="card-text">Inactive: {{ inactive_employees }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Attendance Summary -->
+      <div class="col-md-4 mb-3">
+        <div class="card text-white bg-success">
+          <div class="card-header">Attendance</div>
+          <div class="card-body">
+            <h5 class="card-title">
+              Total Attendance Records: {{ total_attendance }}
+            </h5>
+          </div>
+        </div>
+      </div>
+
+      <!-- Financial Summary -->
+      <div class="col-md-4 mb-3">
+        <div class="card text-white bg-warning">
+          <div class="card-header">Financial Summary</div>
+          <div class="card-body">
+            <h5 class="card-title">Total Salaries: {{ total_worked }}</h5>
+            <p class="card-text">Total Payments: {{ total_payments }}</p>
+            <p class="card-text">Total Balance: {{ total_balance }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Graph Section -->
+  <div class="graph-section">
+    <div class="row mb-3">
+      <div class="col-md-12">
+        <div class="card-body">
+          <!-- Responsive container for the chart -->
+          <div class="embed-responsive">
+            <div id="attendanceChart" class="chart"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Graph -->
+    <div class="row mb-3">
+      <div class="col-md-12">
+        <div class="card-body">
+          <!-- Responsive container for the chart -->
+          <div class="embed-responsive">
+            <div id="paymentChart" class="chart"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Payments -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">Recent Payments</div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Employee</th>
+                  <th>Amount</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for payment in recent_payments %}
+                <tr>
+                  <td>{{ payment.employee.name }}</td>
+                  <td>{{ payment.amount }}</td>
+                  <td>{{ payment.date }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script>
+    var attendanceGraph = {{ attendance_graph|safe }};
+    Plotly.newPlot('attendanceChart', attendanceGraph.data, attendanceGraph.layout, {responsive: true});
+
+    var paymentGraph = {{ payment_graph|safe }};
+    Plotly.newPlot('paymentChart', paymentGraph.data, paymentGraph.layout, {responsive: true});
+
+    window.addEventListener('resize', function() {
+      Plotly.Plots.resize('attendanceChart');
+      Plotly.Plots.resize('paymentChart');
+    });
+
+    window.addEventListener('beforeprint', function() {
+      Plotly.Plots.resize('attendanceChart');
+      Plotly.Plots.resize('paymentChart');
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  {% endblock %}
+</div>

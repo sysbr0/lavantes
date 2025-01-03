@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Alsydnavi {% endblock %}</title>
+    {% load static %}
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'test/test.css' %}"
+    />
+    
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,700"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Beiruti:wght@200..900&display=swap" rel="stylesheet">
+
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
+    <link rel="stylesheet" type="text/css" href="{% static 'base.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"
+      integrity="sha512-JjP4NvT6YsxHRIgJ7D5Y4VQMSuJihEw3zlPcBbXwZfNfRLIvFGIs/NhRQy5n9FWv7JPLiKKaTl6iDBXPzWsh5w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <section>
+      <div class="wrap">
+        <div class="container">
+          <div class="row justify-content-between">
+            <div class="col">
+              <p class="mb-0 phone">
+                <span class="fa fa-phone"></span>{% if email %}
+                <span class="fa fa-envelope"></span> <a href="mailto:{{ email }}">{{ email }}</a>
+            {% else %}
+                <a href="{% url 'employ_login_view' %}">سجل الدخول </a>
+            {% endif %}
+              </p>
+            </div>
+            <div class="col d-flex justify-content-end">
+              <div class="social-media">
+                <p class="mb-0 d-flex">
+
+
+
+                  <a
+                    href="#"
+                    class="d-flex align-items-center justify-content-center"
+                    ><span class="fa fa-facebook"
+                      ><i class="sr-only">Facebook</i></span
+                    ></a
+                  >
+
+
+
+
+                  <a
+                    href="#"
+                    class="d-flex align-items-center justify-content-center"
+                    ><span class="fa fa-twitter"
+                      ><i class="sr-only">Twitter</i></span
+                    ></a
+                  >
+                  <a
+                    href="https://www.instagram.com/sysbr.0/"
+                    class="d-flex align-items-center justify-content-center"
+                    ><span class="fa fa-instagram"
+                      ><i class="sr-only">Instagram</i></span
+                    ></a
+                  >
+                  <a
+                    href="#"
+                    class="d-flex align-items-center justify-content-center"
+                    ><span class="fa fa-dribbble"
+                      ><i class="sr-only">Dribbble</i></span
+                    ></a
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav
+        class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light"
+        id="ftco-navbar"
+      >
+        <div class="container">
+          <a class="navbar-brand" href="{% url 'home'%}"
+            ><img
+              src="https://i.ibb.co/z7HsMdz/Screenshot-2024-07-07-at-22-25-38-removebg-preview.png"
+              alt="الصيدناوي"
+              style="width: 100px; height: 100px"
+            />
+          </a>
+          {% csrf_token %}
+          <form action="post" class="searchform order-sm-start order-lg-last">
+            <div class="form-group d-flex">
+              
+            </div>
+          </form>
+
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#ftco-nav"
+            aria-controls="ftco-nav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="fa fa-bars"></span> Menu
+          </button>
+          <div class="collapse navbar-collapse" id="ftco-nav">
+            <ul class="navbar-nav m-auto">
+              <li class="nav-item active">
+                <a href="{% url 'today_attaned' %}" class="nav-link">Home</a>
+              </li>
+            
+                <div class="dropdown-menu" aria-labelledby="dropdown04">
+               
+                  <a class="dropdown-item" href="{% url 'today_attaned' %}"></a>
+                </div>
+              </li>
+              <li class="nav-item">
+                <a href="https://forms.gle/dxFco1QsLDvv48LU7" class="nav-link"
+                  >اضافة شخص
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'tc_input_view' %}" class="nav-link">البحث </a>
+              </li>
+              <li class="nav-item">
+                <a   class="nav-link" href="{% url 'calendar' %}"
+                >التقويم</a
+              >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </section>
+  </head>
+
+  <body>
+    <main>{% block content %}{% endblock %}</main>
+  </body>
+</html>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.4.1/flowbite.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

@@ -1,0 +1,14 @@
+{% extends 'usd_bar.html' %} {% block content %}
+<html>
+  <head>
+    <title>Add UDS Bill</title>
+  </head>
+  <body>
+    <h1>Add a New UDS Bill</h1>
+    <form method="post">
+      {% csrf_token %} {{ form.as_p }}
+      <button type="submit">Save</button>
+    </form>
+  </body>
+</html>
+{% endblock %}

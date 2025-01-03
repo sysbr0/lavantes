@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Meta description for SEO -->
+    <meta
+      name="description"
+      content="Customer login page for Alsaydnavi company. Access your invoices and account details by entering your Customer ID and token. Contact our accounting department for any assistance."
+    />
+
+    <!-- Meta keywords (optional) -->
+    <meta name="keywords" content="واجهة الفواتر في شركة الصيدناوي " />
+
+    <!-- Meta author (optional) -->
+    <meta name="author" content="Alsaydnavi Company" />
+    <title>الصيدناوي واجهة المشترين</title>
+
+    <style>
+      .login-container-big {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .center {
+        text-align: center;
+      }
+      .content-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        width: 100%;
+        max-width: 900px;
+        background-color: white;
+        padding: 20px;
+        border-radius: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        gap: 30px;
+      }
+
+      .button {
+        display: inline-block; /* Makes the link behave like a button */
+        padding: 10px 20px; /* Adds padding for a better look */
+        background-color: #007bff; /* Button background color */
+        color: white; /* Text color */
+        text-align: center; /* Center the text */
+        text-decoration: none; /* Remove underline */
+        border-radius: 5px; /* Rounded corners */
+        transition: background-color 0.3s; /* Smooth transition for hover effect */
+      }
+
+      .button:hover {
+        background-color: #0056b3; /* Darker shade on hover */
+      }
+
+      .label-section {
+        flex: 1;
+        background-color: #e9f5ff;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .label-section h3 {
+        font-size: 24px;
+        margin-bottom: 15px;
+        color: #333;
+        text-align: center;
+      }
+
+      .label-section p {
+        font-size: 16px;
+        line-height: 1.5;
+        color: #555;
+        text-align: center;
+      }
+
+      .login-container {
+        flex: 1;
+        padding: 30px;
+        border-radius: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #333;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .btn:hover {
+        background-color: #0056b3;
+      }
+
+      .login-link {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .login-link a {
+        color: #007bff;
+        text-decoration: none;
+        font-size: 14px;
+      }
+
+      .login-link a:hover {
+        text-decoration: underline;
+      }
+
+      .messages {
+        margin-bottom: 20px;
+      }
+
+      .messages p {
+        padding: 10px;
+        border-radius: 5px;
+        text-align: center;
+      }
+
+      .messages p.error {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+
+      @media (max-width: 768px) {
+        .content-wrapper {
+          flex-direction: column;
+          gap: 20px;
+        }
+
+        .login-container {
+          width: 90%;
+          margin: 0 auto;
+        }
+
+        .label-section,
+        .login-container {
+          padding: 15px;
+        }
+
+        h2 {
+          font-size: 24px;
+        }
+
+        .btn {
+          font-size: 14px;
+        }
+
+        .login-link a {
+          font-size: 13px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container-big">
+      <div class="content-wrapper">
+        <!-- Label Section (Information) -->
+        <div class="label-section">
+          <h1 class="center">واجهة المشترين</h1>
+
+          <p>
+            اهلا بك في واجهة المشترين في شركة الصيدناوي يمكنكم الوصول الى جميع
+            فواتيركم كل ما عليك فعله كتابة رقم المعرفك في شركتنا و رمز التوثيق
+            للحصول عليهم الرجاء التواصل مع قسم المحاسبة
+          </p>
+          <p>
+            <a href="https://web.alsayidnavi.com/contact" class="button"
+              >هنا
+            </a>
+
+            للتواصل الرجاء النقر
+          </p>
+        </div>
+
+        <!-- Login Panel -->
+        <div class="login-container">
+          <h2>Customer Login</h2>
+
+          <!-- Messages -->
+          <div class="messages">
+            <!-- Example of error message -->
+            <p class="error">Invalid login details, please try again.</p>
+          </div>
+
+          <form method="POST" action="{% url 'customer_login' %}">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="customer_id">Customer ID:</label>
+              <input
+                type="text"
+                name="customer_id"
+                id="customer_id"
+                class="form-control"
+                required
+                placeholder="Enter your customer ID"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="token">Token:</label>
+              <input
+                type="text"
+                name="token"
+                id="token"
+                class="form-control"
+                required
+                placeholder="Enter your token"
+              />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Login</button>
+          </form>
+
+          <!-- Link to TEX login -->
+          <div class="login-link">
+            <p>
+              Or
+              <a href="{% url 'customer_login_tex' %}">Log in using TEX No</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
